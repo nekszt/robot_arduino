@@ -1,7 +1,18 @@
+#ignore
+*
+
+#accept
+!.gitignore
+!README.md
+!.pde
+!.ino
+!.c
+!.cpp
+!*.h
+!.hpp
+
+#accept folder
+!*/
+
+# but not this one
 Visual Micro/
-*.sdf
-*.sln
-*.suo
-*.vcxproj
-*.filters
-*.opensdf
