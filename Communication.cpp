@@ -1,10 +1,20 @@
 #include "Communication.h"
 
 
+// lorsque l'on appel cette fonction, on est sur de sa taille : TAILLE_TRAME_A_TRAITER_TOT
+// et il y a toujours le caractere de fin de chaine : '\0'
+// ne pas mettre d'espaces dans la trames (sinon il faudrait les enlever)
+/**
+* \fn void traitementRecep(char trameRecue[])
+* \brief Traite la reception des trames
+*
+* \param trameRecue
+* \return void
+*/
 void traitementRecep(char trameRecue[])
 {
 	const char carDelim = ',';
-	char commande[3] = "";
+	char commande[TAILLE_CMD_TOT] = "";
 	char tabParam[NB_PARAM_MAX][TAILLE_PARAM_TOT] = { "" };
 	int iBcl = 0;
 	int iCptParam = 0;
@@ -13,7 +23,7 @@ void traitementRecep(char trameRecue[])
 
 	// rajouter condition sur trameRecu
 	// while (trameRecue[iBcl] != carDelim && trameRecue[iBcl] != '\0' && iBcl < TAILLE_CMD_TOT)
-	while (trameRecue[iBcl] != carDelim && trameRecue[iBcl] != '\0' && iBcl < TAILLE_CMD_TRAM)
+	while (trameRecue[iBcl] != carDelim && iBcl < TAILLE_CMD_TRAM && trameRecue[iBcl] != '\0')
 	{
 		commande[iBcl] = trameRecue[iBcl];
 		iBcl++;

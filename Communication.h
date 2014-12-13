@@ -27,20 +27,20 @@ inline int PRINTDC(char, ...)
 #endif
 
 
-#define TAILLE_CMD_TRAM 2
+#define TAILLE_CMD_TRAM		2
 
 // Ne pas modifier
-#define TAILLE_CMD_TOT TAILLE_CMD_TRAM + 1
+#define TAILLE_CMD_TOT		TAILLE_CMD_TRAM + 1
 
-#define NB_PARAM_MAX 3
-#define TAILLE_PARAM_TRAM 3
+#define NB_PARAM_MAX		3
+#define TAILLE_PARAM_TRAM	3
 
 // Ne pas modifier
-#define TAILLE_PARAM_TOT TAILLE_PARAM_TRAM + 1
+#define TAILLE_PARAM_TOT	TAILLE_PARAM_TRAM + 1
 
 
-#define TAILLE_TRAME_A_TRAITER_TOT 21
-#define TAILLE_TRAME_A_TRAITER 20
+#define TAILLE_TRAME_A_TRAITER_TOT	21
+#define TAILLE_TRAME_A_TRAITER		20
 
 
 void traitementRecep(char trameRecue[]);
