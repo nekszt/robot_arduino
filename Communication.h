@@ -1,25 +1,26 @@
 #ifndef _COMMUNICATION_H_
 #define _COMMUNICATION_H_
 
-#include <Arduino.h>
-#include "Fonctions.h"
-#include "Temporisation.h"
+//#include <Arduino.h>
+//#include "Fonctions.h"
+//#include "Temporisation.h"
+#include <iostream>
+#include <cstdio>
+#include <thread>
+#include <chrono>
 
 #define DEBUG
 //#undef DEBUG
 
 #ifdef DEBUG
-#define PRINTD Serial.println
+#define PRINTD(chaine) printf("\n%s", chaine);
+#define PRINTDC(car)	printf("\n%c", car);
 #else
 inline int PRINTD(char*, ...)
 {
 	return 0;
 }
-inline int PRINTD(char, ...)
-{
-	return 0;
-}
-inline int PRINTD(int, ...)
+inline int PRINTDC(char, ...)
 {
 	return 0;
 }

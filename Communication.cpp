@@ -1,7 +1,7 @@
 #include "Communication.h"
 
 
-void traitementRecep(char trameBrute[])
+void traitementRecep(char trameRecue[])
 {
 	const char carDelim = ',';
 	char commande[3] = "";
@@ -9,9 +9,6 @@ void traitementRecep(char trameBrute[])
 	int iBcl = 0;
 	int iCptParam = 0;
 	int iTamponDebParam = 0;
-	char trameRecue[TAILLE_TRAME_A_TRAITER_TOT] = "";
-
-	/*for (int i)*/
 
 
 	// rajouter condition sur trameRecu
@@ -68,7 +65,7 @@ void traitementRecep(char trameBrute[])
 		}*/
 
 			PRINTD(tabParam[0]);
-			PRINTD(trameRecue[iBcl]);
+			PRINTDC(trameRecue[iBcl]);
 	}
 }
 
