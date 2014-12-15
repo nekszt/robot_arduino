@@ -29,7 +29,7 @@ void traitementRecep(char trameRecue[])
 		iBcl++;
 	}
 
-	while (trameRecue[iBcl] != carDelim && iBcl < TAILLE_TRAME_A_TRAITER)
+	while (trameRecue[iBcl] != carDelim && trameRecue[iBcl] != '\0')
 	{
 		iBcl++;
 	}
@@ -38,9 +38,10 @@ void traitementRecep(char trameRecue[])
 	// PRINTD(commande);
 	// PRINTD(trameRecue[iBcl]);
 
-	// on saute ce caractere de separation
+	// on saute ce caractere de separation, sinon on est à la fin de la trame
 	// iTamponDebParam correspond ici au premier caractere du 1er parametre
-	iTamponDebParam = ++iBcl;
+	if (trameRecue[iBcl] != '\0')
+		iTamponDebParam = ++iBcl;
 
 
 	// on place les parametres dans le tableau de parametres
@@ -48,8 +49,8 @@ void traitementRecep(char trameRecue[])
 	// dans une nouvelle variable dont on connait la taille (fixe)
 	if (iBcl < 50)
 	{
-		/*while (trameRecue[iBcl] != carDelim && trameRecue[iBcl] != '\0' && iBcl < TAILLE_CMD_TOT)
-		{*/
+		while (trameRecue[iBcl] != '\0')
+		{
 			int cptChaine = 0;
 
 			// while (trameRecue[iBcl] != carDelim && trameRecue[iBcl] != '\0' && iBcl < TAILLE_PARAM_TOT + iTamponDebParam)
@@ -61,21 +62,24 @@ void traitementRecep(char trameRecue[])
 			}
 
 			// Cette boucle permet d'atteindre le caractere de separation des trames, si ce n'est pas deja fait
-			while (trameRecue[iBcl] != carDelim)
+			while (trameRecue[iBcl] != carDelim && trameRecue[iBcl] != '\0')
 			{
 				iBcl++;
 			}
 
-			// on saute ce caractere de separation
+			// on saute ce caractere de separation, sinon on est à la fin de la trame
 			// iTamponDebParam correspond ici au premier caractere du 2eme parametre
-			iTamponDebParam = ++iBcl;
+			if (trameRecue[iBcl] != '\0')
+				iTamponDebParam = ++iBcl;
 
 
-			/*iCptParam++;
-		}*/
+			iCptParam++;
+		}
 
+			PRINTD(commande);
 			PRINTD(tabParam[0]);
-			PRINTDC(trameRecue[iBcl]);
+			PRINTD(tabParam[1]);
+			PRINTD(tabParam[2]);
 	}
 }
 
