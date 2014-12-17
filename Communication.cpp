@@ -11,11 +11,10 @@
 * \param trameRecue
 * \return void
 */
-void traitementRecep(char trameRecue[])
+Trame traitementRecep(char trameRecue[])
 {
 	const char carDelim = ',';
-	char commande[TAILLE_CMD_TOT] = "";
-	char tabParam[NB_PARAM_MAX][TAILLE_PARAM_TOT] = { "" };
+	Trame trameSeparee;
 	int iBcl = 0;
 	int iCptParam = 0;
 	int iTamponDebParam = 0;
@@ -25,7 +24,7 @@ void traitementRecep(char trameRecue[])
 	// while (trameRecue[iBcl] != carDelim && trameRecue[iBcl] != '\0' && iBcl < TAILLE_CMD_TOT)
 	while (trameRecue[iBcl] != carDelim && iBcl < TAILLE_CMD_TRAM && trameRecue[iBcl] != '\0')
 	{
-		commande[iBcl] = trameRecue[iBcl];
+		trameSeparee.commande[iBcl] = trameRecue[iBcl];
 		iBcl++;
 	}
 
@@ -56,7 +55,7 @@ void traitementRecep(char trameRecue[])
 			// while (trameRecue[iBcl] != carDelim && trameRecue[iBcl] != '\0' && iBcl < TAILLE_PARAM_TOT + iTamponDebParam)
 			while (trameRecue[iBcl] != carDelim && trameRecue[iBcl] != '\0' && iBcl < TAILLE_PARAM_TRAM + iTamponDebParam)
 			{
-				tabParam[iCptParam][cptChaine] = trameRecue[iBcl];
+				trameSeparee.tabParam[iCptParam][cptChaine] = trameRecue[iBcl];
 				cptChaine++;
 				iBcl++;
 			}
@@ -76,10 +75,12 @@ void traitementRecep(char trameRecue[])
 			iCptParam++;
 		}
 
-			PRINTD(commande);
-			PRINTD(tabParam[0]);
-			PRINTD(tabParam[1]);
-			PRINTD(tabParam[2]);
+		PRINTD(trameSeparee.commande);
+		PRINTD(trameSeparee.tabParam[0]);
+		PRINTD(trameSeparee.tabParam[1]);
+		PRINTD(trameSeparee.tabParam[2]);
 	}
 }
+
+
 
