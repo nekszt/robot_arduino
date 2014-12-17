@@ -80,6 +80,8 @@ Trame traitementRecep(char trameRecue[])
 		PRINTD(trameSeparee.tabParam[1]);
 		PRINTD(trameSeparee.tabParam[2]);
 	}
+
+	return trameSeparee;
 }
 
 
