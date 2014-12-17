@@ -4,12 +4,12 @@
 #accept
 !.gitignore
 !README.md
-!.pde
-!.ino
-!.c
-!.cpp
+!*.pde
+!*.ino
+!*.c
+!*.cpp
 !*.h
-!.hpp
+!*.hpp
 
 #accept folder
 !*/
