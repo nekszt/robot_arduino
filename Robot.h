@@ -20,8 +20,26 @@ public:
 
 
 private:
-	int m_vitesseG;
-	int m_vitesseD;
+
+	void InitPort(void);
+	void InitPWM(void);
+
+	void MoteurGauche(int iAlpha, bool bSens);
+	void MoteurDroit(int iAlpha, bool bSens);
+	void Test(void);
+
+	bool CapteurArriere(void);
+	bool CapteurGauche(void);
+	bool CapteurDroit(void);
+
+
+	// Variables permettant de connaitre l'état des moteurs
+	bool m_moteurOnG;
+	bool m_moteurOnD;
+	bool m_moteurAvantG;
+	bool m_moteurAvantD;
+	int m_moteurVitesseG; // vitesse entre 0 et 100
+	int m_moteurVitesseD;
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include "Fonctions.h"
 #include "Temporisation.h"
+#include "Robot.h"
 
 
 #define DEBUG
@@ -41,6 +42,24 @@ inline int PRINTD(int, ...)
 
 #define TAILLE_TRAME_A_TRAITER_TOT 21
 #define TAILLE_TRAME_A_TRAITER 20
+
+
+#define MO	"1"
+#define MOG	"2"
+#define MOD "3"
+#define MV	"4"
+#define MVG	"5"
+#define MVD	"6"
+#define MA	"7"
+#define MAG "8"
+#define MAD "9"
+
+#define RIR		"10"
+#define RIR1	"11"
+#define RIR2	"12"
+#define RIR3	"13"
+
+#define RUR	"14"
 
 
 struct Trame
