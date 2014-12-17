@@ -5,6 +5,7 @@
 #include "Fonctions.h"
 #include "Temporisation.h"
 
+
 #define DEBUG
 //#undef DEBUG
 
@@ -42,7 +43,14 @@ inline int PRINTD(int, ...)
 #define TAILLE_TRAME_A_TRAITER 20
 
 
-void traitementRecep(char trameRecue[]);
+struct Trame
+{
+	char commande[TAILLE_CMD_TOT] = "";
+	char tabParam[NB_PARAM_MAX][TAILLE_PARAM_TOT] = { "" };
+};
+typedef struct Trame Trame;
+
+Trame traitementRecep(char trameRecue[]);
 
 
 #endif
