@@ -1,13 +1,16 @@
 //#include <Metro.h>
 #include "Communication.h"
+#include "Robot.h"
 
 
 #define BLUETOOTH Serial1
-#define DELAY_UPDATE_CAPTEUR 1
-#define TAILLE_BUF 75
+#define DELAY_UPDATE_CAPTEUR 100
+#define TAILLE_BUF TAILLE_TRAME_A_TRAITER_TOT
 
 //static unsigned long int iTempsEnvoieCapteur = 0;
 static Temporisation tempoUpdateCapt;
+
+Robot monRobot;
 
 
 void setup()
@@ -25,55 +28,55 @@ void setup()
 
 void loop()
 {
+	//Réception Android
+	static char strEnvoiCapteurs[TAILLE_BUF] = "";
+	static int iBclReception = 0;
+	Trame maTrame;
 
-	////Réception Android
-	//static char strEnvoiCapteurs[TAILLE_BUF] = "_________";
-	//static int iBclReception = 0;
-	//static int iCpt = 0;
-	//static int iBcl;
-	//static char strTrame[TAILLE_BUF] = "_________";
+	static int iCpt = 0;
+	static int iBcl;
+	static char strTrame[TAILLE_BUF] = "_________";
 
-	//if (BLUETOOTH.available() > 0)
-	//{
-	//	strTrame[iBclReception] = BLUETOOTH.read(); //lecture caractère par caractère
-	//	if (strTrame[iBclReception] == '\0')
-	//	{
-	//		strTrame[iBclReception] = '\0';
-	//		Serial.print("Mobile : ");
-	//		Serial.println(strTrame);
-	//		iBclReception = 0;
+	// Il faudra mettre la lecture des donnees dans une fonction readBluetooth -------------------------------------------------------
+	if (BLUETOOTH.available() > 0)
+	{
+		strTrame[iBclReception] = BLUETOOTH.read(); //lecture caractère par caractère
+		if (strTrame[iBclReception] == '\0')
+		{
+			strTrame[iBclReception] = '\0';
+			Serial.print("Mobile : ");
+			Serial.println(strTrame);
+			iBclReception = 0;
 
-	//	}
-	//	else {
-	//		iBclReception++;
-	//	}
-	//}
-	////Envoie des infos capteurs toute les DELAY_UPDATE_CAPTEUR ms
-	//if (/*(iTempsEnvoieCapteur + DELAY_UPDATE_CAPTEUR) < millis()*/tempoUpdateCapt.finTempo())
-	//{
-	//	//Envoie
-	//	Serial.print("Robot :");
-	//	Serial.println(iCpt);
-	//	sprintf(strEnvoiCapteurs, "%d", iCpt);
+			// La trame est complete
+			maTrame = traitementRecep(strTrame);
+			dispatch(monRobot, maTrame);
+		}
+		else {
+			iBclReception++;
+		}
+	}
 
-	//	iBcl = -1;
-	//	do
-	//	{
-	//		iBcl++;
-	//		BLUETOOTH.write(strEnvoiCapteurs[iBcl]);
 
-	//	} while (strEnvoiCapteurs[iBcl] != '\0');
+	//Envoie des infos capteurs toute les DELAY_UPDATE_CAPTEUR ms
+	if (tempoUpdateCapt.finTempo())
+	{
+		//Envoie
+		Serial.print("Robot :");
+		Serial.println(iCpt);
+		sprintf(strEnvoiCapteurs, "%d", iCpt);
 
-	//	//iTempsEnvoieCapteur = millis();
-	//	tempoUpdateCapt.demTempo();
-	//	iCpt++;
-	//}
+		iBcl = -1;
+		do
+		{
+			iBcl++;
+			BLUETOOTH.write(strEnvoiCapteurs[iBcl]);
 
-	DDRB = BIT5;
-	PORTB = BIT5;
+		} while (strEnvoiCapteurs[iBcl] != '\0');
 
-	traitementRecep("ffd,abcf,defg");
 
-	delay(2000);
+		tempoUpdateCapt.demTempo();
+		iCpt++;
+	}
 }
 

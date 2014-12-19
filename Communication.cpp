@@ -1,4 +1,5 @@
 #include "Communication.h"
+#include "Robot.h"
 
 
 // lorsque l'on appel cette fonction, on est sur de sa taille : TAILLE_TRAME_A_TRAITER_TOT
@@ -97,5 +98,78 @@ Trame traitementRecep(char trameRecue[])
 	return trameSeparee;
 }
 
+void dispatch(Robot &robot, Trame &trameSeparee)
+{
+	String cmd = trameSeparee.commande;
+	String params[NB_PARAM_MAX];
+	for (int i = 0; i < NB_PARAM_MAX; i++)
+	{
+		params[i] = trameSeparee.tabParam[i];
+	}
 
+
+	if (cmd == MO)
+	{
+		// si on ne renseigne pas les parametres alors on appel la fonction sans les parametres (les moteurs se mettent en marche)
+		if (params[0] == "" && params[1] == "")
+			robot.moteurOn();
+		else
+			robot.moteurOn(params[0], params[1]); // conversion implicite de string à bool
+	}
+
+	else if (cmd == MOG)
+	{
+		if (params[0] == "")
+			robot.moteurOnG();
+		else
+			robot.moteurOnG(params[0]);
+	}
+
+	else if (cmd == MOD)
+	{
+		if (params[0] == "")
+			robot.moteurOnD();
+		else
+			robot.moteurOnD(params[0]);
+	}
+
+	else if (cmd == MV)
+	{
+		robot.moteurVitesse(params[0].toInt());
+	}
+
+	else if (cmd == MVG)
+	{
+		robot.moteurVitesseG(params[0].toInt());
+	}
+
+	else if (cmd == MVD)
+	{
+		robot.moteurVitesseD(params[0].toInt());
+	}
+
+	else if (cmd == MA)
+	{
+		if (params[0] == "" && params[1] == "")
+			robot.moteurAvant();
+		else
+			robot.moteurAvant(params[0], params[1]); // conversion implicite de string à bool
+	}
+
+	else if (cmd == MAG)
+	{
+		if (params[0] == "")
+			robot.moteurAvantG();
+		else
+			robot.moteurAvantG(params[0]); // conversion implicite de string à bool
+	}
+
+	else if (cmd == MAD)
+	{
+		if (params[0] == "")
+			robot.moteurAvantD();
+		else
+			robot.moteurAvantD(params[0]); // conversion implicite de string à bool
+	}
+}
 

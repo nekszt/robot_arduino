@@ -4,10 +4,11 @@
 #include <Arduino.h>
 #include "Fonctions.h"
 #include "Temporisation.h"
+#include "Robot.h"
 
 
 #define DEBUG
-//#undef DEBUG
+#undef DEBUG
 
 #ifdef DEBUG
 #define PRINTD Serial.println
@@ -72,6 +73,7 @@ struct Trame
 typedef struct Trame Trame;
 
 Trame traitementRecep(char trameRecue[]);
+void dispatch(Robot &robot, Trame &trameSeparee);
 
 
 #endif
