@@ -5,8 +5,16 @@ Robot::Robot()
 	InitPort();
 	InitPWM();
 
-	m_vitesseG = 50;
-	m_vitesseD = 50;
+	m_moteurOnG = 0;
+	m_moteurOnD = 0;
+	m_moteurAvantG = 1;
+	m_moteurAvantD = 1;
+	m_moteurVitesseG = 0;
+	m_moteurVitesseD = 0;
+
+	// on initialise correctement les sorties pour piloter le robot
+	MoteurGauche(m_moteurVitesseG, m_moteurAvantG);
+	MoteurDroit(m_moteurVitesseD, m_moteurAvantD);
 }
 
 
@@ -15,10 +23,10 @@ FONCTION INIT
 ***********************************/
 void Robot::InitPort(void)
 {
-	DDRC |= 0b01000000;
-	DDRD |= 0b10010000;
-	DDRE |= 0b01000000;
-	DDRF = 0x00;
+	DDRC |= BIT6;
+	DDRD |= (BIT7 | BIT4);
+	DDRE |= BIT6;
+	DDRF = DDRF & ~(BIT1 | BIT4 | BIT5);
 }
 
 void Robot::InitPWM(void)
@@ -113,10 +121,12 @@ FONCTIONS PUBLIC
 ************************************/
 void Robot::moteurOn(bool gauche, bool droite)
 {
-	moteurOnG(gauche);
-	moteurOnD(droite);
+#warning a modifier apres les tests
+	/*moteurOnG(gauche);
+	moteurOnD(droite);*/
 
-	// Test();
+	if (gauche && droite)
+		Test();
 }
 
 void Robot::moteurOnG(bool gauche)
@@ -163,13 +173,21 @@ void Robot::moteurAvantG(bool gauche)
 	// on met le moteur en avant
 	if (gauche && !m_moteurAvantG)
 	{
-		MoteurGauche(m_moteurVitesseG, true);
+		if (m_moteurOnG)
+			MoteurGauche(m_moteurVitesseG, true);
+		else
+			MoteurGauche(0, true);
+		
 		m_moteurAvantG = true;
 	}
 	// on met le moteur en arriere
 	else if (!gauche && m_moteurAvantG)
 	{
-		MoteurGauche(m_moteurVitesseG, false);
+		if (m_moteurOnG)
+			MoteurGauche(m_moteurVitesseG, false);
+		else
+			MoteurGauche(0, false);
+
 		m_moteurAvantG = false;
 	}
 }
@@ -179,13 +197,21 @@ void Robot::moteurAvantD(bool droite)
 	// on met le moteur en avant
 	if (droite && !m_moteurAvantD)
 	{
-		MoteurDroit(m_moteurVitesseD, true);
+		if (m_moteurOnD)
+			MoteurDroit(m_moteurVitesseD, true);
+		else
+			MoteurDroit(0, true);
+
 		m_moteurAvantD = true;
 	}
 	// on met le moteur en arriere
 	else if (!droite && m_moteurAvantD)
 	{
-		MoteurDroit(m_moteurVitesseD, false);
+		if (m_moteurOnD)
+			MoteurDroit(m_moteurVitesseD, false);
+		else
+			MoteurDroit(0, false);
+		
 		m_moteurAvantD = false;
 	}
 }
@@ -199,11 +225,21 @@ void Robot::moteurVitesse(int vitesse)
 
 void Robot::moteurVitesseG(int vitesseG)
 {
-	MoteurGauche(vitesseG, m_moteurAvantG);
+	if (m_moteurOnG)
+		MoteurGauche(vitesseG, m_moteurAvantG);
+	else
+		MoteurGauche(0, m_moteurAvantG);
+	
+	m_moteurVitesseG = vitesseG;
 }
 
 void Robot::moteurVitesseD(int vitesseD)
 {
-	MoteurDroit(vitesseD, m_moteurAvantD);
+	if (m_moteurOnD)
+		MoteurDroit(vitesseD, m_moteurAvantD);
+	else
+		MoteurDroit(0, m_moteurAvantD);
+
+	m_moteurVitesseD = vitesseD;
 }
 
