@@ -15,6 +15,19 @@ Trame traitementRecep(char trameRecue[])
 {
 	const char carDelim = ',';
 	Trame trameSeparee;
+	// on initialise le conteneur de la trame découpée
+	for (int i = 0; i < TAILLE_CMD_TRAM; i++)
+	{
+		trameSeparee.commande[i] = ' ';
+	}
+	for (int j = 0; j < NB_PARAM_MAX; j++)
+	{
+		for (int i = 0; i < TAILLE_PARAM_TRAM; i++)
+		{
+			trameSeparee.tabParam[j][i] = ' ';
+		}
+	}
+
 	int iBcl = 0;
 	int iCptParam = 0;
 	int iTamponDebParam = 0;

@@ -43,10 +43,31 @@ inline int PRINTD(int, ...)
 #define TAILLE_TRAME_A_TRAITER 20
 
 
+// Define pour la reception des trames
+#define MO	"1" // Moteur On
+#define MOG	"2" // Moteur On Gauche
+#define MOD "3"
+
+#define MV	"4"
+#define MVG "5"
+#define MVD "6"
+
+#define MA	"7"
+#define MAG "8"
+#define MAD "9"
+
+#define RIR		"10"
+#define RIR1	"11"
+#define RIR2	"12"
+#define RIR3	"13"
+
+#define RUS	"14"
+
+
 struct Trame
 {
-	char commande[TAILLE_CMD_TOT] = "";
-	char tabParam[NB_PARAM_MAX][TAILLE_PARAM_TOT] = { "" };
+	char commande[TAILLE_CMD_TOT];
+	char tabParam[NB_PARAM_MAX][TAILLE_PARAM_TOT];
 };
 typedef struct Trame Trame;
 
