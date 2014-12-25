@@ -1,31 +1,7 @@
 #ifndef _COMMUNICATION_H_
 #define _COMMUNICATION_H_
 
-#include <Arduino.h>
-#include "Fonctions.h"
-#include "Temporisation.h"
 #include "Robot.h"
-
-
-#define DEBUG
-#undef DEBUG
-
-#ifdef DEBUG
-#define PRINTD Serial.println
-#else
-inline int PRINTD(char*, ...)
-{
-	return 0;
-}
-inline int PRINTD(char, ...)
-{
-	return 0;
-}
-inline int PRINTD(int, ...)
-{
-	return 0;
-}
-#endif
 
 
 #define TAILLE_CMD_TRAM 2
@@ -44,25 +20,37 @@ inline int PRINTD(int, ...)
 #define TAILLE_TRAME_A_TRAITER 20
 
 
+#define PARAM_VIDE -1 // utilisé lorsque la commande ou le parametre est vide
+
+// ATTENTION modifier la taille de ces defines si on modifie la taille des params
+#define CMD_BLANK	"  "
+#define PARAM_BLANK "   "
+
+
 // Define pour la reception des trames
-#define MO	"1" // Moteur On
-#define MOG	"2" // Moteur On Gauche
-#define MOD "3"
+// on doit ajouter un espace pour avoir le meme nombre de caractere lors de la comparaison
+// si on modifie la taille de la commande il faut aussi modifier la taille ci dessous (ajout/enlever espaces)
+#define MO	1 // Moteur On
+#define MOG	2 // Moteur On Gauche
+#define MOD 3
 
-#define MV	"4"
-#define MVG "5"
-#define MVD "6"
+#define MV	4
+#define MVG 5
+#define MVD 6
 
-#define MA	"7"
-#define MAG "8"
-#define MAD "9"
+#define MA	7
+#define MAG 8
+#define MAD 9
 
-#define RIR		"10"
-#define RIR1	"11"
-#define RIR2	"12"
-#define RIR3	"13"
+#define RIR		10
+#define RIR1	11
+#define RIR2	12
+#define RIR3	13
 
-#define RUS	"14"
+#define RUS	14
+
+// vitesse max qu'il est possible d'envoyer au robot
+#define VITESSE_PRECISION 10
 
 
 struct Trame
@@ -72,8 +60,8 @@ struct Trame
 };
 typedef struct Trame Trame;
 
-Trame traitementRecep(char trameRecue[]);
-void dispatch(Robot &robot, Trame &trameSeparee);
+const Trame& traitementRecep(char trameRecue[]);
+void dispatch(Robot &robot, Trame const &trameSeparee);
 
 
 #endif
