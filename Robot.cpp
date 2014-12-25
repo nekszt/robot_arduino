@@ -143,7 +143,7 @@ void Robot::Test(void)
 /***********************************
 FONCTIONS PUBLIC
 ************************************/
-void Robot::moteurOn(bool gauche, bool droite)
+void Robot::moteurOn(const bool gauche, const bool droite)
 {
 #warning a modifier apres les tests
 	moteurOnG(gauche);
@@ -155,7 +155,7 @@ void Robot::moteurOn(bool gauche, bool droite)
 	PRINTD("moteurOn");
 }
 
-void Robot::moteurOnG(bool gauche)
+void Robot::moteurOnG(const bool gauche)
 {
 	// on met en route le moteur
 	if (gauche && !m_moteurOnG)
@@ -173,7 +173,7 @@ void Robot::moteurOnG(bool gauche)
 	PRINTD("moteurOnG");
 }
 
-void Robot::moteurOnD(bool droite)
+void Robot::moteurOnD(const bool droite)
 {
 	// on met en route le moteur
 	if (droite && !m_moteurOnD)
@@ -192,7 +192,7 @@ void Robot::moteurOnD(bool droite)
 }
 
 
-void Robot::moteurAvant(bool gauche, bool droite)
+void Robot::moteurAvant(const bool gauche, const bool droite)
 {
 	moteurAvantG(gauche);
 	moteurAvantD(droite);
@@ -200,7 +200,7 @@ void Robot::moteurAvant(bool gauche, bool droite)
 	PRINTD("moteurAvant");
 }
 
-void Robot::moteurAvantG(bool gauche)
+void Robot::moteurAvantG(const bool gauche)
 {
 	// on met le moteur en avant
 	if (gauche && !m_moteurAvantG)
@@ -226,7 +226,7 @@ void Robot::moteurAvantG(bool gauche)
 	PRINTD("moteurAvantG");
 }
 
-void Robot::moteurAvantD(bool droite)
+void Robot::moteurAvantD(const bool droite)
 {
 	// on met le moteur en avant
 	if (droite && !m_moteurAvantD)
@@ -253,7 +253,7 @@ void Robot::moteurAvantD(bool droite)
 }
 
 
-void Robot::moteurVitesse(int vitesseG, int vitesseD)
+void Robot::moteurVitesse(const int vitesseG, const int vitesseD)
 {
 	moteurVitesseG(vitesseG);
 	moteurVitesseD(vitesseD);
@@ -261,7 +261,7 @@ void Robot::moteurVitesse(int vitesseG, int vitesseD)
 	PRINTD("moteurVitesse");
 }
 
-void Robot::moteurVitesseG(int vitesseG)
+void Robot::moteurVitesseG(const int vitesseG)
 {
 	m_moteurVitesseG = vitesseG * m_vitessePrecision;
 
@@ -273,7 +273,7 @@ void Robot::moteurVitesseG(int vitesseG)
 	PRINTD("moteurVitesseG");
 }
 
-void Robot::moteurVitesseD(int vitesseD)
+void Robot::moteurVitesseD(const int vitesseD)
 {
 	m_moteurVitesseD = vitesseD * m_vitessePrecision;
 

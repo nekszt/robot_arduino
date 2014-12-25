@@ -8,17 +8,17 @@ class Robot
 public:
 	Robot();
 
-	void moteurOn(bool gauche = true, bool droite = true);
-	void moteurOnG(bool gauche = true);
-	void moteurOnD(bool droite = true);
+	void moteurOn(const bool gauche = true, const bool droite = true);
+	void moteurOnG(const bool gauche = true);
+	void moteurOnD(const bool droite = true);
 
-	void moteurAvant(bool gauche = true, bool droite = true);
-	void moteurAvantG(bool gauche = true);
-	void moteurAvantD(bool droite = true);
+	void moteurAvant(const bool gauche = true, const bool droite = true);
+	void moteurAvantG(const bool gauche = true);
+	void moteurAvantD(const bool droite = true);
 	
-	void moteurVitesse(int vitesseG, int vitesseD);
-	void moteurVitesseG(int vitesseG);
-	void moteurVitesseD(int vitesseD);
+	void moteurVitesse(const int vitesseG, const int vitesseD);
+	void moteurVitesseG(const int vitesseG);
+	void moteurVitesseD(const int vitesseD);
 
 	inline bool CapteurArriere(void);
 	inline bool CapteurGauche(void);
