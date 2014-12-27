@@ -24,6 +24,10 @@ volatile uint8_t &Robot::m_servoPort(PORTB);
 volatile uint8_t &Robot::m_servoDDR(DDRB);
 const uint8_t &Robot::m_servoBit(BIT7);
 
+bool Robot::m_etatCaptIRArr(false);
+bool Robot::m_etatCaptIRG(false);
+bool Robot::m_etatCaptIRD(false);
+
 
 Robot::Robot()
 {
@@ -36,6 +40,15 @@ Robot::Robot()
 	m_moteurAvantD = 1;
 	m_moteurVitesseG = 0;
 	m_moteurVitesseD = 0;
+
+	m_sendCaptIR1 = false;
+	m_sendCaptIR2 = false;
+	m_sendCaptIR3 = false;
+	m_sendUS = false;
+
+	m_bCaptIRArrPhone = false;
+	m_bCaptIRGPhone = false;
+	m_bCaptIRDPhone = false;
 
 	// on initialise correctement les sorties pour piloter le robot
 	MoteurGauche(m_moteurVitesseG, m_moteurAvantG);
@@ -307,6 +320,83 @@ void Robot::moteurVitesseD(const int vitesseD)
 		MoteurDroit(0, m_moteurAvantD);
 
 	PRINTD("moteurVitesseD");
+}
+
+
+/***********************************
+CAPTEURS INFRA-ROUGE
+***********************************/
+// retourne l'etat actuel du capteur
+
+bool Robot::CapteurArriere(const unsigned int delaiTest)
+{
+	//PF4
+	//return !((PINF & BIT4) == BIT4);
+	//return !((m_captArrPin & m_captArrBit) == m_captArrBit);
+	static Temporisation tempo;
+	bool bDetect = !((m_captArrPin & m_captArrBit) == m_captArrBit);
+
+	if ((m_etatCaptIRArr != bDetect) && !tempo.isStart())
+		tempo.demTempo();
+	else if ((m_etatCaptIRArr != bDetect) && tempo.finTempo(delaiTest))
+		m_etatCaptIRArr = bDetect;
+	else if ((m_etatCaptIRArr == bDetect) && tempo.isStart())
+		tempo.stop();
+
+	return bDetect;
+}
+
+bool Robot::CapteurGauche(const unsigned int delaiTest)
+{
+	//PF5
+	//return !((PINF & BIT5) == BIT5);
+	//return !((m_captGPin & m_captGBit) == m_captGBit);
+	static Temporisation tempo;
+	bool bDetect = !((m_captGPin & m_captGBit) == m_captGBit);
+
+	if ((m_etatCaptIRG != bDetect) && !tempo.isStart())
+		tempo.demTempo();
+	else if ((m_etatCaptIRG != bDetect) && tempo.finTempo(delaiTest))
+		m_etatCaptIRG = bDetect;
+	else if ((m_etatCaptIRG == bDetect) && tempo.isStart())
+		tempo.stop();
+
+	return bDetect;
+}
+
+bool Robot::CapteurDroit(const unsigned int delaiTest)
+{
+	//PF1
+	//return !((PINF & BIT1) == BIT1);
+	//return !((m_captDPin & m_captDBit) == m_captDBit);
+
+
+	static Temporisation tempo;
+	bool bDetect = !((m_captDPin & m_captDBit) == m_captDBit);
+
+	if ((m_etatCaptIRD != bDetect) && !tempo.isStart())
+		tempo.demTempo();
+	else if ((m_etatCaptIRD != bDetect) && tempo.finTempo(delaiTest))
+		m_etatCaptIRD = bDetect;
+	else if ((m_etatCaptIRD == bDetect) && tempo.isStart())
+		tempo.stop();
+
+	return bDetect;
+}
+
+bool Robot::getCaptIRArr()
+{
+	return m_etatCaptIRArr;
+}
+
+bool Robot::getCaptIRG()
+{
+	return m_etatCaptIRG;
+}
+
+bool Robot::getCaptIRD()
+{
+	return m_etatCaptIRD;
 }
 
 

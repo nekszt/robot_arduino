@@ -28,8 +28,6 @@
 
 
 // Define pour la reception des trames
-// on doit ajouter un espace pour avoir le meme nombre de caractere lors de la comparaison
-// si on modifie la taille de la commande il faut aussi modifier la taille ci dessous (ajout/enlever espaces)
 #define MO	1 // Moteur On
 #define MOG	2 // Moteur On Gauche
 #define MOD 3
@@ -49,9 +47,19 @@
 
 #define RUS	14
 
+
+// Define pour l'envoie des trames
+#define IR1 1
+#define IR2 2
+#define IR3 3
+
+#define US	4
+
 // vitesse max qu'il est possible d'envoyer au robot
 #define VITESSE_PRECISION 10
 
+
+const char carDelim = ',';
 
 struct Trame
 {
@@ -62,6 +70,28 @@ typedef struct Trame Trame;
 
 const Trame& traitementRecep(char trameRecue[]);
 void dispatch(Robot &robot, Trame const &trameSeparee);
+
+inline void ctorTram(char trame[], int cmd, bool state);
+void sendCapteurs(Robot &robot);
+
+
+inline void ctorTram(char trame[], int cmd, bool state)
+{
+	if (cmd < 1 || cmd > 99)
+		return;
+
+	String chaine = (String)cmd;
+
+	if (state == false)
+		chaine += carDelim + (String)state;
+
+	int i;
+	for (i = 0; i < chaine.length() && i < TAILLE_TRAME_A_TRAITER; i++)
+	{
+		trame[i] = chaine[i];
+	}
+	trame[i] = '\0';
+}
 
 
 #endif

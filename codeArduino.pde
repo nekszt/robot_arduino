@@ -1,6 +1,5 @@
 //#include <Metro.h>
 #include "Robot.h"
-#include "Temporisation.h"
 #include "Communication.h"
 
 /* La vitesse du robot a ete mesuree a 33.3 cm.s^-1, soit 0.33 m.s^-1, soit 1.2 km.h^-1
@@ -58,13 +57,14 @@ void setup()
 
 void loop()
 {
-	//static char strEnvoiCapteurs[TAILLE_BUF] = "                    ";
 	static char strTrame[TAILLE_BUF] = "                    ";
-	bool bLedOn(false);
-	unsigned long tps;
 
-	/*static int iCpt = 0;
-	static int iBcl;*/
+
+	// lecture des entrees
+	// on lit les capteurs
+	monRobot->CapteurArriere(100);
+	monRobot->CapteurDroit(100);
+	monRobot->CapteurGauche(100);
 
 	
 	// on lit les trames puis on les traitent
@@ -75,53 +75,9 @@ void loop()
 		dispatch(*monRobot, maTrame);
 	}
 
-	if (monRobot->CapteurArriere())
-	{
-		PRINTD("capteur arriere");
-		bLedOn = true;
-	}
 
-	if (monRobot->CapteurDroit())
-	{
-		PRINTD("capteur droit");
-		bLedOn = true;
-	}
+	sendCapteurs(*monRobot);
 
-	if (monRobot->CapteurGauche())
-	{
-		PRINTD("capteur gauche");
-		bLedOn = true;
-	}
-
-	if (bLedOn)
-		Robot::putON(Robot::m_ledLPort, Robot::m_ledLBit);
-		//Robot::m_ledLPort |= Robot::m_ledLBit;
-	else
-		Robot::putOFF(Robot::m_ledLPort, Robot::m_ledLBit);
-		//Robot::m_ledLPort &= ~Robot::m_ledLBit;
-
-
-
-	//Envoie des infos capteurs toute les DELAY_UPDATE_CAPTEUR ms
-	/*if (tempoUpdateCapt.finTempo())
-	{*/
-		/*//Envoie
-		Serial.print("Robot :");
-		Serial.println(iCpt);
-		sprintf(strEnvoiCapteurs, "%d", iCpt);
-
-		iBcl = -1;
-		do
-		{
-			iBcl++;
-			BLUETOOTH.write(strEnvoiCapteurs[iBcl]);
-
-		} while (strEnvoiCapteurs[iBcl] != '\0');
-
-
-		tempoUpdateCapt.demTempo();
-		iCpt++;*/
-	/*}*/
 
 
 	wdt_reset();

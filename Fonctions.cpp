@@ -58,6 +58,23 @@ bool readTBluetooth(char trame[], const int iTaille)
 	return endRead;
 }
 
+void sendTBluetooth(char trame[], const int iTaille)
+{
+	int iBcl = 0;
+
+	//Envoie
+	PRINTD("Robot :");
+	PRINTD(trame);
+
+	while (trame[iBcl] != '\0' && iBcl < (iTaille -1))
+	{
+		BLUETOOTH.write(trame[iBcl]);
+		iBcl++;
+	}
+	BLUETOOTH.write('\0');
+}
+
+
 /* Attention si on utilise cette fonction ou si on utilise analogWrite,
 *  Cette derniere fonction utilise le timer 4 sur la pin 13
 *  Il faut penser a remettre une vitesse correcte sur les moteurs (registres de comparaison)

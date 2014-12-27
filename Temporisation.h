@@ -9,14 +9,17 @@ public:
 	//Temporisation();
 	Temporisation(long lDuree = 0, bool bStart = 0);
 
-	bool finTempo() const;
-	bool finTempo(long lDuree) const; // on peut tester avec une autre durée que celle renseignée au début, si l'on renseigne ce paramètre
+	bool finTempo();
+	bool finTempo(long lDuree); // on peut tester avec une autre durée que celle renseignée au début, si l'on renseigne ce paramètre
 	void demTempo();
 	void setDuree(long lDuree);
+	bool isStart() const;
+	void stop();
 
 private:
 	long m_lHeureDeb;
 	long m_lDuree;
+	bool m_started;
 };
 
 #endif
