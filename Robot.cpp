@@ -286,3 +286,29 @@ void Robot::moteurVitesseD(int vitesseD)
 }
 
 
+/***********************************
+CAPTEURS INFRA-ROUGE
+***********************************/
+
+bool Robot::CapteurArriere(void)
+{
+	//PF4
+	//return !((PINF & BIT4) == BIT4);
+	return !((m_captArrPin & m_captArrBit) == m_captArrBit);
+}
+
+bool Robot::CapteurGauche(void)
+{
+	//PF5
+	//return !((PINF & BIT5) == BIT5);
+	return !((m_captGPin & m_captGBit) == m_captGBit);
+}
+
+bool Robot::CapteurDroit(void)
+{
+	//PF1
+	//return !((PINF & BIT1) == BIT1);
+	return !((m_captDPin & m_captDBit) == m_captDBit);
+}
+
+

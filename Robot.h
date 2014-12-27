@@ -20,9 +20,9 @@ public:
 	void moteurVitesseG(int vitesseG);
 	void moteurVitesseD(int vitesseD);
 
-	inline bool CapteurArriere(void);
-	inline bool CapteurGauche(void);
-	inline bool CapteurDroit(void);
+	bool CapteurArriere(const unsigned int delaiTest);
+	bool CapteurGauche(const unsigned int delaiTest);
+	bool CapteurDroit(const unsigned int delaiTest);
 
 	void Test(void);
 
@@ -86,32 +86,6 @@ private:
 	static volatile uint8_t &m_servoDDR;
 	static const uint8_t &m_servoBit;
 };
-
-
-/***********************************
-CAPTEURS INFRA-ROUGE
-***********************************/
-
-inline bool Robot::CapteurArriere(void)
-{
-	//PF4
-	//return !((PINF & BIT4) == BIT4);
-	return !((m_captArrPin & m_captArrBit) == m_captArrBit);
-}
-
-inline bool Robot::CapteurGauche(void)
-{
-	//PF5
-	//return !((PINF & BIT5) == BIT5);
-	return !((m_captGPin & m_captGBit) == m_captGBit);
-}
-
-inline bool Robot::CapteurDroit(void)
-{
-	//PF1
-	//return !((PINF & BIT1) == BIT1);
-	return !((m_captDPin & m_captDBit) == m_captDBit);
-}
 
 
 inline void Robot::putON(volatile uint8_t &port, const uint8_t &bit)
