@@ -57,22 +57,14 @@ void setup()
 
 void loop()
 {
-	//static char strEnvoiCapteurs[TAILLE_BUF] = "                    ";
 	static char strTrame[TAILLE_BUF] = "                    ";
-	bool bLedOn(false);
 
-	/*static int iCpt = 0;
-	static int iBcl;*/
 
 	// lecture des entrees
 	// on lit les capteurs
-	monRobot->CapteurArriere(500);
-	monRobot->CapteurDroit(500);
-	monRobot->CapteurGauche(500);
-	static bool oldCaptIRArr = false;
-	static bool oldCaptIRG = false;
-	static bool oldCaptIRD = false;
-	bool captTemporaire;
+	monRobot->CapteurArriere(100);
+	monRobot->CapteurDroit(100);
+	monRobot->CapteurGauche(100);
 
 	
 	// on lit les trames puis on les traitent
@@ -84,60 +76,8 @@ void loop()
 	}
 
 
-	captTemporaire = monRobot->getCaptIRArr();
-	if (/*monRobot->CapteurArriere()*/oldCaptIRArr != captTemporaire)
-	{
-		oldCaptIRArr = captTemporaire;
-		PRINTD("capteur arriere");
-		bLedOn = true;
-	}
+	sendCapteurs(*monRobot);
 
-	captTemporaire = monRobot->getCaptIRD();
-	if (/*monRobot->CapteurDroit()*/oldCaptIRD != captTemporaire)
-	{
-		oldCaptIRD = captTemporaire;
-		PRINTD("capteur droit");
-		bLedOn = true;
-	}
-
-	captTemporaire = monRobot->getCaptIRG();
-	if (/*monRobot->CapteurGauche()*/oldCaptIRG != captTemporaire)
-	{
-		oldCaptIRG = captTemporaire;
-		PRINTD("capteur gauche");
-		bLedOn = true;
-	}
-
-
-	if (bLedOn)
-		Robot::putON(Robot::m_ledLPort, Robot::m_ledLBit);
-		//Robot::m_ledLPort |= Robot::m_ledLBit;
-	else
-		Robot::putOFF(Robot::m_ledLPort, Robot::m_ledLBit);
-		//Robot::m_ledLPort &= ~Robot::m_ledLBit;
-
-
-
-	//Envoie des infos capteurs toute les DELAY_UPDATE_CAPTEUR ms
-	/*if (tempoUpdateCapt.finTempo())
-	{*/
-		/*//Envoie
-		Serial.print("Robot :");
-		Serial.println(iCpt);
-		sprintf(strEnvoiCapteurs, "%d", iCpt);
-
-		iBcl = -1;
-		do
-		{
-			iBcl++;
-			BLUETOOTH.write(strEnvoiCapteurs[iBcl]);
-
-		} while (strEnvoiCapteurs[iBcl] != '\0');
-
-
-		tempoUpdateCapt.demTempo();
-		iCpt++;*/
-	/*}*/
 
 
 	wdt_reset();

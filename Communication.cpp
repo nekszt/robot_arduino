@@ -1,6 +1,7 @@
 #include "Communication.h"
 
 
+
 // lorsque l'on appel cette fonction, on est sur de sa taille : TAILLE_TRAME_A_TRAITER_TOT
 // et il y a toujours le caractere de fin de chaine : '\0'
 // ne pas mettre d'espaces dans la trames (sinon il faudrait les enlever)
@@ -13,7 +14,6 @@
 */
 const Trame& traitementRecep(char trameRecue[])
 {
-	const char carDelim = ',';
 	Trame trameSeparee;
 	// on initialise le conteneur de la trame découpée
 	for (int i = 0; i < TAILLE_CMD_TRAM; i++)
@@ -216,85 +216,71 @@ void dispatch(Robot &robot, Trame const &trameSeparee)
 		break;
 	}
 
+}
 
 
+void sendCapteurs(Robot &robot)
+{
+	static char strTrameCapt[TAILLE_TRAME_A_TRAITER_TOT] = "                    ";
 
+	static bool oldCaptIRArr = false;
+	static bool oldCaptIRG = false;
+	static bool oldCaptIRD = false;
+	bool captTemporaire;
+	bool bLedOn(false);
+	static Temporisation temp(80);
 
-	/*if (cmd == MO)
+	/* Capteurs IR
+	*  Si il y a un changement d'etat des capteurs alors on envoie l'info
+	*/
+	captTemporaire = robot.getCaptIRArr();
+	if (oldCaptIRArr != captTemporaire)
 	{
-		// si on ne renseigne pas les parametres alors on appel la fonction sans les parametres (les moteurs se mettent en marche)
-		if (params[0] == PARAM_VIDE && params[1] == PARAM_VIDE)
-		{
-			robot.moteurOn();
-			PRINTD("at_10");
-		}
-		else
-		{
-			robot.moteurOn(params[0], params[1]); // conversion implicite de string à bool
-			PRINTD("at_11");
-		}
+		oldCaptIRArr = captTemporaire;
+		PRINTD("capteur arriere");
+		bLedOn = true;
+		ctorTram(strTrameCapt, IR1, captTemporaire);
+		PRINTD("Trame a envoyer :");
+		PRINTD(strTrameCapt);
+		sendTBluetooth(strTrameCapt, TAILLE_TRAME_A_TRAITER_TOT);
 	}
 
-	else if (cmd == MOG)
+	captTemporaire = robot.getCaptIRD();
+	if (oldCaptIRD != captTemporaire)
 	{
-		if (params[0] == PARAM_VIDE)
-		{
-			robot.moteurOnG();
-			PRINTD("at_12");
-		}
-		else
-		{
-			robot.moteurOnG(params[0]);
-			PRINTD("bool convert :");
-			PRINTD((bool)params[0]);
-		}
+		oldCaptIRD = captTemporaire;
+		PRINTD("capteur droit");
+		bLedOn = true;
+		ctorTram(strTrameCapt, IR3, captTemporaire);
+		PRINTD("Trame a envoyer :");
+		PRINTD(strTrameCapt);
+		sendTBluetooth(strTrameCapt, TAILLE_TRAME_A_TRAITER_TOT);
 	}
 
-	else if (cmd == MOD)
+	captTemporaire = robot.getCaptIRG();
+	if (oldCaptIRG != captTemporaire)
 	{
-		if (params[0] == PARAM_VIDE)
-			robot.moteurOnD();
-		else
-			robot.moteurOnD(params[0]);
+		oldCaptIRG = captTemporaire;
+		PRINTD("capteur gauche");
+		bLedOn = true;
+		ctorTram(strTrameCapt, IR2, captTemporaire);
+		PRINTD("Trame a envoyer :");
+		PRINTD(strTrameCapt);
+		sendTBluetooth(strTrameCapt, TAILLE_TRAME_A_TRAITER_TOT);
 	}
 
-	else if (cmd == MV && params[0] >= 0 && params[0] <= 100 && params[0] != PARAM_VIDE)
-	{
-		robot.moteurVitesse(params[0]);
-	}
 
-	else if (cmd == MVG && params[0] >= 0 && params[0] <= 100 && params[0] != PARAM_VIDE)
+	if (bLedOn)
 	{
-		robot.moteurVitesseG(params[0]);
-	}
+		Robot::putON(Robot::m_ledLPort, Robot::m_ledLBit);
+		//Robot::m_ledLPort |= Robot::m_ledLBit;
 
-	else if (cmd == MVD && params[0] >= 0 && params[0] <= 100 && params[0] != PARAM_VIDE)
-	{
-		robot.moteurVitesseD(params[0]);
+		temp.demTempo();
 	}
-
-	else if (cmd == MA)
+	else if (temp.isStart() && temp.finTempo())
 	{
-		if (params[0] == PARAM_VIDE && params[1] == PARAM_VIDE)
-			robot.moteurAvant();
-		else
-			robot.moteurAvant(params[0], params[1]); // conversion implicite de string à bool
+		Robot::putOFF(Robot::m_ledLPort, Robot::m_ledLBit);
+		//Robot::m_ledLPort &= ~Robot::m_ledLBit;
 	}
-
-	else if (cmd == MAG)
-	{
-		if (params[0] == PARAM_VIDE)
-			robot.moteurAvantG();
-		else
-			robot.moteurAvantG(params[0]); // conversion implicite de string à bool
-	}
-
-	else if (cmd == MAD)
-	{
-		if (params[0] == PARAM_VIDE)
-			robot.moteurAvantD();
-		else
-			robot.moteurAvantD(params[0]); // conversion implicite de string à bool
-	}*/
 }
 

@@ -55,8 +55,10 @@ inline int PRINTD(int, ...)
 
 void resetPortDir();
 
-// Read Trame Bluetooth
+// Read Tram Bluetooth
 bool readTBluetooth(char trame[], const int iTaille);
+// Send Tram Bluetooth in 1 time
+void sendTBluetooth(char trame[], const int iTaille);
 
 // blocant
 void blinkLedBlock(const int pin, const int times, const int speedMS);
