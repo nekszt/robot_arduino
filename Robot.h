@@ -20,9 +20,12 @@ public:
 	void moteurVitesseG(int vitesseG);
 	void moteurVitesseD(int vitesseD);
 
-	bool CapteurArriere(const unsigned int delaiTest);
-	bool CapteurGauche(const unsigned int delaiTest);
-	bool CapteurDroit(const unsigned int delaiTest);
+	static bool CapteurArriere(const unsigned int delaiTest = 50);
+	static bool CapteurGauche(const unsigned int delaiTest = 50);
+	static bool CapteurDroit(const unsigned int delaiTest = 50);
+	static bool getCaptIRArr();
+	static bool getCaptIRG();
+	static bool getCaptIRD();
 
 	void Test(void);
 
@@ -51,9 +54,9 @@ private:
 	int m_moteurVitesseD;
 
 
-	bool m_etatCaptIRArr;
-	bool m_etatCaptIRG;
-	bool m_etatCaptIRD;
+	static bool m_etatCaptIRArr;
+	static bool m_etatCaptIRG;
+	static bool m_etatCaptIRD;
 
 	// ces variables sont mises à jour par l'ack
 	bool m_bCaptIRArrPhone;

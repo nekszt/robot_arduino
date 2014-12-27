@@ -1,6 +1,5 @@
 //#include <Metro.h>
 #include "Robot.h"
-#include "Temporisation.h"
 #include "Communication.h"
 
 /* La vitesse du robot a ete mesuree a 33.3 cm.s^-1, soit 0.33 m.s^-1, soit 1.2 km.h^-1
@@ -61,10 +60,19 @@ void loop()
 	//static char strEnvoiCapteurs[TAILLE_BUF] = "                    ";
 	static char strTrame[TAILLE_BUF] = "                    ";
 	bool bLedOn(false);
-	unsigned long tps;
 
 	/*static int iCpt = 0;
 	static int iBcl;*/
+
+	// lecture des entrees
+	// on lit les capteurs
+	monRobot->CapteurArriere(500);
+	monRobot->CapteurDroit(500);
+	monRobot->CapteurGauche(500);
+	static bool oldCaptIRArr = false;
+	static bool oldCaptIRG = false;
+	static bool oldCaptIRD = false;
+	bool captTemporaire;
 
 	
 	// on lit les trames puis on les traitent
@@ -75,23 +83,31 @@ void loop()
 		dispatch(*monRobot, maTrame);
 	}
 
-	if (monRobot->CapteurArriere())
+
+	captTemporaire = monRobot->getCaptIRArr();
+	if (/*monRobot->CapteurArriere()*/oldCaptIRArr != captTemporaire)
 	{
+		oldCaptIRArr = captTemporaire;
 		PRINTD("capteur arriere");
 		bLedOn = true;
 	}
 
-	if (monRobot->CapteurDroit())
+	captTemporaire = monRobot->getCaptIRD();
+	if (/*monRobot->CapteurDroit()*/oldCaptIRD != captTemporaire)
 	{
+		oldCaptIRD = captTemporaire;
 		PRINTD("capteur droit");
 		bLedOn = true;
 	}
 
-	if (monRobot->CapteurGauche())
+	captTemporaire = monRobot->getCaptIRG();
+	if (/*monRobot->CapteurGauche()*/oldCaptIRG != captTemporaire)
 	{
+		oldCaptIRG = captTemporaire;
 		PRINTD("capteur gauche");
 		bLedOn = true;
 	}
+
 
 	if (bLedOn)
 		Robot::putON(Robot::m_ledLPort, Robot::m_ledLBit);

@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include <avr/wdt.h>
 #include <avr/delay.h>
+#include "Temporisation.h"
 
 /*#define BIT0 0x01
 #define BIT1 0x02
