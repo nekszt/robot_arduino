@@ -48,7 +48,7 @@ void setup()
 	iCptTimeOut = 0;
 
 	// blink led to show end initialization
-	//blinkLedBlock(13, 3, 70);
+	blinkLedBlock(13, 3, 70);
 	PRINTD("arduino initialized");
 	delay(300);
 

@@ -83,13 +83,15 @@ void Robot::InitPWM(void)
 	//MOTEUR DROIT (2) Timer 4 
 	TCCR4A = 0b00000010;
 	TCCR4B = 0b00001011;
-	TCCR4C = 0b00001001;
+	//TCCR4C = 0b00001001;
+	TCCR4C = 0b00001000; // on desactive immediatement la pwm
 	TCCR4D = 0b00000000;
-	TCCR4E = 0b00100000;
+	TCCR4E = 0b00000000;
 	//OCR4D = 100; //<---Registre de comparaison
 
 	//MOTEUR GAUCHE (1) Timer3
-	TCCR3A = 0b10000001;
+	//TCCR3A = 0b10000001;
+	TCCR3A = 0b00000001; // on desactive immediatement la pwm
 	TCCR3B = 0b00001101;
 	TCCR3C = 0b00000000;
 	//OCR3AL = 100; //<---Registre de comparaison
@@ -99,29 +101,51 @@ void Robot::InitPWM(void)
 /***********************************
 CONTROLE MOTEURS
 ***********************************/
-void Robot::MoteurGauche(int iAlpha, bool bSens){
-	if (bSens == true){
+void Robot::MoteurGauche(int iAlpha, bool bSens)
+{
+	if (bSens == true)
+	{
 		PORTD |= BIT4;
 	}
-	else{
+	else
+	{
 		PORTD &= ~BIT4;
 	}
 
 	//iAlpha = iAlpha*2.55;
-	OCR3AL = iAlpha*2.55;
+
+
+	if (iAlpha == 0)
+		TCCR3A &= ~(BIT7 | BIT6); // on desactive la PWM
+	else
+	{
+		OCR3AL = iAlpha*2.55;
+		TCCR3A |= BIT7; // on reactive la PWM
+	}
 }
 
 
-void Robot::MoteurDroit(int iAlpha, bool bSens){
-	if (bSens == true){
+void Robot::MoteurDroit(int iAlpha, bool bSens)
+{
+	if (bSens == true)
+	{
 		PORTE |= BIT6;
 	}
-	else{
+	else
+	{
 		PORTE &= ~BIT6;
 	}
 
 	//iAlpha = iAlpha*2.55;
-	OCR4D = iAlpha*2.55;
+
+
+	if (iAlpha == 0)
+		TCCR4C &= ~BIT0; // on desactive la PWM
+	else
+	{
+		OCR4D = iAlpha*2.55;
+		TCCR4C |= BIT0; // on reactive la PWM
+	}
 }
 
 
