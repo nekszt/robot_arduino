@@ -211,6 +211,34 @@ void dispatch(Robot &robot, Trame const &trameSeparee)
 			robot.moteurAvantD(params[0]); // conversion implicite de int à bool
 		break;
 
+	case RIR:
+		if (params[0] == PARAM_VIDE && params[1] == PARAM_VIDE && params[2] == PARAM_VIDE)
+			robot.setSendCaptIR();
+		else
+			robot.setSendCaptIR(params[0], params[1], params[2]); // conversion implicite de int à bool
+		break;
+
+	case RIR1:
+		if (params[0] == PARAM_VIDE)
+			robot.setSendCaptIRArr();
+		else
+			robot.setSendCaptIRArr(params[0]); // conversion implicite de int à bool
+		break;
+
+	case RIR2:
+		if (params[0] == PARAM_VIDE)
+			robot.setSendCaptIRG();
+		else
+			robot.setSendCaptIRG(params[0]); // conversion implicite de int à bool
+		break;
+
+	case RIR3:
+		if (params[0] == PARAM_VIDE)
+			robot.setSendCaptIRD();
+		else
+			robot.setSendCaptIRD(params[0]); // conversion implicite de int à bool
+		break;
+
 	default:
 		PRINTD("DEFAULT switch - error");
 		break;
@@ -239,10 +267,15 @@ void sendCapteurs(Robot &robot)
 		oldCaptIRArr = captTemporaire;
 		PRINTD("capteur arriere");
 		bLedOn = true;
-		ctorTram(strTrameCapt, IR1, captTemporaire);
-		PRINTD("Trame a envoyer :");
-		PRINTD(strTrameCapt);
-		sendTBluetooth(strTrameCapt, TAILLE_TRAME_A_TRAITER_TOT);
+
+		// peut on envoyer l'info ?
+		if (robot.canSendCaptIRArr())
+		{
+			ctorTram(strTrameCapt, IR1, captTemporaire);
+			PRINTD("Trame a envoyer :");
+			PRINTD(strTrameCapt);
+			sendTBluetooth(strTrameCapt, TAILLE_TRAME_A_TRAITER_TOT);
+		}
 	}
 
 	captTemporaire = robot.getCaptIRD();
@@ -251,10 +284,14 @@ void sendCapteurs(Robot &robot)
 		oldCaptIRD = captTemporaire;
 		PRINTD("capteur droit");
 		bLedOn = true;
-		ctorTram(strTrameCapt, IR3, captTemporaire);
-		PRINTD("Trame a envoyer :");
-		PRINTD(strTrameCapt);
-		sendTBluetooth(strTrameCapt, TAILLE_TRAME_A_TRAITER_TOT);
+		// peut on envoyer l'info ?
+		if (robot.canSendCaptIRD())
+		{
+			ctorTram(strTrameCapt, IR3, captTemporaire);
+			PRINTD("Trame a envoyer :");
+			PRINTD(strTrameCapt);
+			sendTBluetooth(strTrameCapt, TAILLE_TRAME_A_TRAITER_TOT);
+		}
 	}
 
 	captTemporaire = robot.getCaptIRG();
@@ -263,10 +300,14 @@ void sendCapteurs(Robot &robot)
 		oldCaptIRG = captTemporaire;
 		PRINTD("capteur gauche");
 		bLedOn = true;
-		ctorTram(strTrameCapt, IR2, captTemporaire);
-		PRINTD("Trame a envoyer :");
-		PRINTD(strTrameCapt);
-		sendTBluetooth(strTrameCapt, TAILLE_TRAME_A_TRAITER_TOT);
+		// peut on envoyer l'info ?
+		if (robot.canSendCaptIRG())
+		{
+			ctorTram(strTrameCapt, IR2, captTemporaire);
+			PRINTD("Trame a envoyer :");
+			PRINTD(strTrameCapt);
+			sendTBluetooth(strTrameCapt, TAILLE_TRAME_A_TRAITER_TOT);
+		}
 	}
 
 

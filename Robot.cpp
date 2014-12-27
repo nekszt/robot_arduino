@@ -41,6 +41,15 @@ Robot::Robot()
 	m_moteurVitesseG = 0;
 	m_moteurVitesseD = 0;
 
+	m_sendCaptIR1 = false;
+	m_sendCaptIR2 = false;
+	m_sendCaptIR3 = false;
+	m_sendUS = false;
+
+	m_bCaptIRArrPhone = false;
+	m_bCaptIRGPhone = false;
+	m_bCaptIRDPhone = false;
+
 	// on initialise correctement les sorties pour piloter le robot
 	MoteurGauche(m_moteurVitesseG, m_moteurAvantG);
 	MoteurDroit(m_moteurVitesseD, m_moteurAvantD);

@@ -20,6 +20,14 @@ public:
 	void moteurVitesseG(int vitesseG);
 	void moteurVitesseD(int vitesseD);
 
+	inline void setSendCaptIR(const bool ir1 = true, const bool ir2 = true, const bool ir3 = true);
+	inline void setSendCaptIRArr(const bool ir = true);
+	inline void setSendCaptIRG(const bool ir = true);
+	inline void setSendCaptIRD(const bool ir = true);
+	inline bool canSendCaptIRArr() const;
+	inline bool canSendCaptIRG() const;
+	inline bool canSendCaptIRD() const;
+
 	static bool CapteurArriere(const unsigned int delaiTest = 50);
 	static bool CapteurGauche(const unsigned int delaiTest = 50);
 	static bool CapteurDroit(const unsigned int delaiTest = 50);
@@ -52,6 +60,13 @@ private:
 	bool m_moteurAvantD;
 	int m_moteurVitesseG; // vitesse entre 0 et 100
 	int m_moteurVitesseD;
+
+
+	bool m_sendCaptIR1; // actuellement le capteur IR arriere
+	bool m_sendCaptIR2; // actuellement le capteur IR gauche
+	bool m_sendCaptIR3; // actuellement le capteur IR droite
+
+	bool m_sendUS;
 
 
 	static bool m_etatCaptIRArr;
@@ -99,6 +114,51 @@ inline void Robot::putON(volatile uint8_t &port, const uint8_t &bit)
 inline void Robot::putOFF(volatile uint8_t &port, const uint8_t &bit)
 {
 	port &= ~bit;
+}
+
+
+inline void Robot::setSendCaptIR(const bool ir1, const bool ir2, const bool ir3)
+{
+	setSendCaptIRArr(ir1);
+	setSendCaptIRG(ir2);
+	setSendCaptIRD(ir3);
+	PRINTD("setSendCaptIR : params :");
+	PRINTD(ir1);
+	PRINTD(ir2);
+	PRINTD(ir3);
+}
+
+inline void Robot::setSendCaptIRArr(const bool ir)
+{
+	m_sendCaptIR1 = ir;
+	PRINTD("setSendCaptIRArr");
+}
+
+inline void Robot::setSendCaptIRG(const bool ir)
+{
+	m_sendCaptIR2 = ir;
+	PRINTD("setSendCaptIR G");
+}
+
+inline void Robot::setSendCaptIRD(const bool ir)
+{
+	m_sendCaptIR3 = ir;
+	PRINTD("setSendCaptIR D");
+}
+
+inline bool Robot::canSendCaptIRArr() const
+{
+	return m_sendCaptIR1;
+}
+
+inline bool Robot::canSendCaptIRG() const
+{
+	return m_sendCaptIR2;
+}
+
+inline bool Robot::canSendCaptIRD() const
+{
+	return m_sendCaptIR3;
 }
 
 
