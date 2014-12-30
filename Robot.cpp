@@ -182,7 +182,6 @@ FONCTIONS PUBLIC
 ************************************/
 void Robot::moteurOn(const bool gauche, const bool droite)
 {
-#warning a modifier apres les tests
 	moteurOnG(gauche);
 	moteurOnD(droite);
 
