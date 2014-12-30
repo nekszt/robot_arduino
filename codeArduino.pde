@@ -9,11 +9,8 @@
 
 
 
-#define DELAY_UPDATE_CAPTEUR 140
 #define TAILLE_BUF TAILLE_TRAME_A_TRAITER_TOT
 
-
-static Temporisation *tempoUpdateCapt;
 
 static Robot *monRobot;
 
@@ -96,7 +93,8 @@ ISR(WDT_vect)
 	blinkLedBlock(13, 10, 20);
 
 	// on reset le robot
-	*monRobot = Robot();
+	delete monRobot;
+	monRobot = new Robot();
 
 	WDT_start();
 }
