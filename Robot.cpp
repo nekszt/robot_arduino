@@ -1,7 +1,5 @@
 #include "Robot.h"
 
-const int Robot::m_vitessePrecision = 10;
-
 volatile uint8_t &Robot::m_captArrPin(PINF);
 volatile uint8_t &Robot::m_captGPin(PINF);
 volatile uint8_t &Robot::m_captDPin(PINF);
@@ -23,17 +21,21 @@ const uint8_t &Robot::m_ledLBit(BIT7);
 
 volatile uint8_t &Robot::m_servoPort(PORTB);
 volatile uint8_t &Robot::m_servoDDR(DDRB);
-const uint8_t &Robot::m_servoBit(BIT7);
+const uint8_t &Robot::m_servoBit(BIT5);
 
 bool Robot::m_etatCaptIRArr(false);
 bool Robot::m_etatCaptIRG(false);
 bool Robot::m_etatCaptIRD(false);
 
 
-Robot::Robot() : m_ultraSon()
+Robot::Robot() : m_ultraSon(), m_prescalerT1(250000), m_coeffConvMsStepT1(m_prescalerT1 * 0.001), m_vitessePrecision(VITESSE_PRECISION)
 {
 	InitPort();
+	// initialisation timer 3 et 4 pour moteurs
 	InitPWM();
+
+	// initialisations sevomoteur
+	initServoMoteur();
 
 	m_moteurOnG = 0;
 	m_moteurOnD = 0;
@@ -51,11 +53,12 @@ Robot::Robot() : m_ultraSon()
 	m_bCaptIRGPhone = false;
 	m_bCaptIRDPhone = false;
 
+
 	// on initialise correctement les sorties pour piloter le robot
 	MoteurGauche(m_moteurVitesseG, m_moteurAvantG);
 	MoteurDroit(m_moteurVitesseD, m_moteurAvantD);
 
-	PRINTD("ctor");
+	PRINTD("ctor robot");
 }
 
 
@@ -385,4 +388,33 @@ bool Robot::CapteurDroit(const unsigned int delaiTest)
 }
 
 
+void Robot::initServoMoteur() const
+{
+	//cli();
+
+	ICR1 = TOP_TIMER1;
+
+	// Disable timer interrupts
+	TIMSK1 = 0x00;
+
+	// initialisation du mode seulement et de l'horloge
+	TCCR1A = 0b00000010;
+	TCCR1B = 0b00011011;
+	TCCR1C = 0b00000000;
+
+	//sei();
+}
+
+void Robot::enableServo() const
+{
+	TCCR1A |= BIT7;
+	OCR1A = 375 - 1; // 45 degres
+	PRINTD("enable servo");
+}
+
+void Robot::disableServo() const
+{
+	TCCR1A &= ~(BIT7 | BIT6);
+	PRINTD("disable servo");
+}
 

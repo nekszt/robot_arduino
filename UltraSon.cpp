@@ -13,7 +13,7 @@ volatile uint8_t &UltraSon::m_compTrigPort(PORTB);
 const uint8_t &UltraSon::m_compTrigBit(BIT7);
 
 
-UltraSon::UltraSon() : m_enable(false), m_top(5000 - 1), m_nbrOvf(3), m_pulse(5),
+UltraSon::UltraSon() : m_enable(false), m_top(TOP_TIMER1), m_nbrOvf(3), m_pulse(5),
 m_diff(0), m_temporaire(0), m_bOK(false), m_cptOvfOutput(0), m_diffChanged(false),
 m_cptOvfPWM(0), m_prescaler(250000), m_coeffConvMS(m_prescaler * 0.000001),
 m_distance(-1), m_distanceNew(-1), m_realDistance(0)

@@ -34,9 +34,11 @@ void setup()
 	monRobot = new Robot();
 	delay(50);
 	PRINTD("robot initialized");
+	monRobot->enableServo();
+	//monRobot->setPositionServo(0);
 
 
-	/*iCptTimeOut = 0;
+	iCptTimeOut = 0;
 
 	// blink led to show end initialization
 	blinkLedBlock(13, 3, 70);
@@ -44,7 +46,7 @@ void setup()
 	delay(300);
 
 	// WD time out 250ms, but time out is ~290ms
-	WDT_start();*/
+	WDT_start();
 }
 
 void loop()

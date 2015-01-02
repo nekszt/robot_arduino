@@ -246,6 +246,11 @@ void dispatch(Robot &robot, Trame const &trameSeparee)
 			robot.setSendDistance(params[0]); // conversion implicite de int à bool
 		break;
 
+	case PSM:
+		if (params[0] >= POS_SERVO_DEG_MIN && params[0] <= POS_SERVO_DEG_MAX && params[0] != PARAM_VIDE)
+			robot.setPositionServo(params[0]);
+		break;
+
 	default:
 		PRINTD("DEFAULT switch - error");
 		break;

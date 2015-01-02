@@ -47,6 +47,8 @@
 
 #define RUS	14
 
+#define PSM	15
+
 
 // Define pour l'envoie des trames
 #define IR1 1
@@ -54,9 +56,6 @@
 #define IR3 3
 
 #define US	4
-
-// vitesse max qu'il est possible d'envoyer au robot
-#define VITESSE_PRECISION 10
 
 
 const char carDelim = ',';

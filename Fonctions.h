@@ -27,6 +27,15 @@ extern const uint8_t BIT7;
 
 #define BLUETOOTH Serial1
 
+#define TOP_TIMER1 5000 - 1
+
+
+// vitesse max qu'il est possible d'envoyer au robot
+#define VITESSE_PRECISION 10
+
+#define POS_SERVO_DEG_MAX 90
+#define POS_SERVO_DEG_MIN 0
+
 
 #define DEBUG
 //#undef DEBUG

@@ -50,6 +50,14 @@ public:
 	inline int getDistance();
 
 
+	// Utilise le timer 1
+	void initServoMoteur() const;
+	// Position en degre de 0 a 45
+	inline void setPositionServo(const int position) const;
+	void enableServo() const;
+	void disableServo() const;
+
+
 	void Test(void);
 
 	inline static void putON(volatile uint8_t &port, const uint8_t &bit);
@@ -78,6 +86,8 @@ private:
 	int m_moteurVitesseG; // vitesse entre 0 et 100
 	int m_moteurVitesseD;
 
+	const int m_vitessePrecision;
+
 
 	bool m_sendCaptIR1; // actuellement le capteur IR arriere
 	bool m_sendCaptIR2; // actuellement le capteur IR gauche
@@ -98,7 +108,8 @@ private:
 	//int m_distancePhone;
 
 
-	static const int m_vitessePrecision;
+	unsigned const long m_prescalerT1;
+	const float m_coeffConvMsStepT1;
 
 
 	// ports capteurs, servo, led, 
@@ -245,6 +256,15 @@ inline void Robot::enableUtraSon()
 inline void Robot::disableUltraSon()
 {
 	m_ultraSon.disable();
+}
+
+
+inline void Robot::setPositionServo(const int position) const
+{
+	if (position >= POS_SERVO_DEG_MIN && position <= POS_SERVO_DEG_MAX)
+	{
+		OCR1A = ((float)(1 + (position / (float)POS_SERVO_DEG_MAX)) * m_coeffConvMsStepT1) - 1;
+	}
 }
 
 
