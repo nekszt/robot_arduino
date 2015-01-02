@@ -334,7 +334,7 @@ void sendCapteurs(Robot &robot)
 		PRINTD(distance);
 		if (robot.canSendDistance())
 		{
-			ctorTram(strTrameCapt, RUS, dstTemporaire);
+			ctorTram(strTrameCapt, US, dstTemporaire);
 			PRINTD("Trame a envoyer :");
 			PRINTD(strTrameCapt);
 			sendTBluetooth(strTrameCapt, TAILLE_TRAME_A_TRAITER_TOT);
