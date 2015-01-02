@@ -1,7 +1,7 @@
 #ifndef FONCTIONS_H
 #define FONCTIONS_H
 
-#include <Arduino.h>
+//#include <Arduino.h> // is included by Temporisation.h
 #include <avr/wdt.h>
 #include <avr/delay.h>
 #include "Temporisation.h"

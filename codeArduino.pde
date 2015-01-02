@@ -1,6 +1,4 @@
-//#include <Metro.h>
-#include "Robot.h"
-#include "Communication.h"
+#include "Communication.h" // includes Robot.h
 
 /* La vitesse du robot a ete mesuree a 33.3 cm.s^-1, soit 0.33 m.s^-1, soit 1.2 km.h^-1
 *  Sachant que l'on détecte un obstacle à 15 - 20 cm, le programme doit etre plus rapide que
