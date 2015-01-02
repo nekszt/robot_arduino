@@ -17,9 +17,9 @@ volatile uint8_t &Robot::m_ledLPort(PORTC);
 volatile uint8_t &Robot::m_ledLDDR(DDRC);
 const uint8_t &Robot::m_ledLBit(BIT7);
 
-volatile uint8_t &Robot::m_USPort(PORTD);
-volatile uint8_t &Robot::m_USDDR(DDRD);
-const uint8_t &Robot::m_USBit(BIT6);
+//volatile uint8_t &Robot::m_USPort(PORTD);
+//volatile uint8_t &Robot::m_USDDR(DDRD);
+//const uint8_t &Robot::m_USBit(BIT6);
 
 volatile uint8_t &Robot::m_servoPort(PORTB);
 volatile uint8_t &Robot::m_servoDDR(DDRB);
@@ -30,7 +30,7 @@ bool Robot::m_etatCaptIRG(false);
 bool Robot::m_etatCaptIRD(false);
 
 
-Robot::Robot()
+Robot::Robot() : m_ultraSon()
 {
 	InitPort();
 	InitPWM();
@@ -45,7 +45,7 @@ Robot::Robot()
 	m_sendCaptIR1 = false;
 	m_sendCaptIR2 = false;
 	m_sendCaptIR3 = false;
-	m_sendUS = false;
+	m_sendDistance = false;
 
 	m_bCaptIRArrPhone = false;
 	m_bCaptIRGPhone = false;
@@ -78,7 +78,7 @@ void Robot::InitPort(void)
 	m_ledLDDR |= m_ledLBit;
 	// ----------------------------------------------------------------------------
 	// on met en sorti US et servo
-	m_USDDR |= m_USBit;
+	//m_USDDR |= m_USBit;
 	m_servoDDR |= m_servoBit;
 
 	/* init ports capteurs IR

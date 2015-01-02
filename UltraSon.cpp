@@ -20,6 +20,8 @@ m_distance(-1), m_distanceNew(-1), m_realDistance(0)
 {
 	initPorts();
 	initTimer1();
+
+	PRINTD("ctor us called");
 }
 
 void UltraSon::enable()
@@ -36,6 +38,7 @@ void UltraSon::enable()
 		//TCCR1A |= BIT3;
 
 		m_enable = true;
+		PRINTD("enable us");
 	}
 }
 
@@ -52,6 +55,7 @@ void UltraSon::disable()
 		m_realDistance = 0;
 
 		m_enable = false;
+		PRINTD("disable us");
 	}
 }
 
@@ -124,12 +128,13 @@ void UltraSon::initTimer1()
 	//sei();
 }
 
-uint16_t UltraSon::readDistance(const int taillePalier, const int delayActualise)
+uint16_t UltraSon::readDistance(const unsigned int taillePalier, const unsigned int delayActualise)
 {
 	static Temporisation tempo(delayActualise);
 
 	if (m_diffChanged)
 	{
+		//PRINTD("us pin change");
 		double tps;
 
 		//Serial.print("temps = "); // temps du signal sur PWM Output en us
@@ -143,13 +148,14 @@ uint16_t UltraSon::readDistance(const int taillePalier, const int delayActualise
 			*  on ajoute 0.5 pour que la valeur entiere soit arrondi correctement
 			*/
 			m_realDistance = (tps / 50.) - 2.5;
-			/*Serial.print("distance = "); // distance en cm
-			Serial.println(m_realDistance);*/
+			//PRINTD("distance = "); // distance en cm
+			//PRINTD(m_realDistance);
 			m_distanceNew = (int)((m_realDistance + (taillePalier / 2.)) / taillePalier) * taillePalier;
 			if (m_distanceNew != m_distance && tempo.finTempo())
 			{
 				tempo.demTempo();
 				m_distance = m_distanceNew;
+				//PRINTD(m_distance);
 			}
 		}
 		else
@@ -164,6 +170,8 @@ uint16_t UltraSon::readDistance(const int taillePalier, const int delayActualise
 				tempo.demTempo();
 				m_distance = m_distanceNew;
 			}
+
+			//PRINTD("error");
 		}
 
 		m_diffChanged = false;

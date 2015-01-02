@@ -35,11 +35,8 @@ void setup()
 	delay(50);
 	PRINTD("robot initialized");
 
-	/*tempoUpdateCapt = new Temporisation(DELAY_UPDATE_CAPTEUR);
-	tempoUpdateCapt->demTempo();*/
 
-
-	iCptTimeOut = 0;
+	/*iCptTimeOut = 0;
 
 	// blink led to show end initialization
 	blinkLedBlock(13, 3, 70);
@@ -47,7 +44,7 @@ void setup()
 	delay(300);
 
 	// WD time out 250ms, but time out is ~290ms
-	WDT_start();
+	WDT_start();*/
 }
 
 void loop()
@@ -60,6 +57,7 @@ void loop()
 	monRobot->CapteurArriere(100);
 	monRobot->CapteurDroit(100);
 	monRobot->CapteurGauche(100);
+	monRobot->CapteurDistance(10);
 
 	
 	// on lit les trames puis on les traitent
@@ -95,5 +93,17 @@ ISR(WDT_vect)
 	monRobot = new Robot();
 
 	WDT_start();
+}
+
+
+
+ISR(PCINT0_vect)
+{
+	monRobot->interruptPinChange();
+}
+
+ISR(TIMER1_OVF_vect)
+{
+	monRobot->interruptOvfT1();
 }
 

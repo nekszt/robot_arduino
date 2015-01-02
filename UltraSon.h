@@ -22,7 +22,7 @@ public:
 	void enable();
 	void disable();
 
-	uint16_t readDistance(const int taillePalier, const int delayActualise);
+	uint16_t readDistance(const unsigned int taillePalier, const unsigned int delayActualise);
 
 	inline void interruptionPinChange();
 	inline void interruptionOvf();

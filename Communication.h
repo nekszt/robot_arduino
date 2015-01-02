@@ -93,5 +93,20 @@ inline void ctorTram(char trame[], int cmd, bool state)
 	trame[i] = '\0';
 }
 
+inline void ctorTram(char trame[], int cmd, int value)
+{
+	if (cmd < 1 || cmd > 99 || value < -1 || value > 999)
+		return;
+
+	String chaine = (String)cmd + carDelim + (String)value;
+
+	int i;
+	for (i = 0; i < chaine.length() && i < TAILLE_TRAME_A_TRAITER; i++)
+	{
+		trame[i] = chaine[i];
+	}
+	trame[i] = '\0';
+}
+
 
 #endif

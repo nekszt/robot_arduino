@@ -20,6 +20,7 @@ public:
 	void moteurVitesseG(const int vitesseG);
 	void moteurVitesseD(const int vitesseD);
 
+
 	inline void setSendCaptIR(const bool ir1 = true, const bool ir2 = true, const bool ir3 = true);
 	inline void setSendCaptIRArr(const bool ir = true);
 	inline void setSendCaptIRG(const bool ir = true);
@@ -35,6 +36,20 @@ public:
 	inline static bool getCaptIRG();
 	inline static bool getCaptIRD();
 
+
+	inline void interruptPinChange();
+	inline void interruptOvfT1();
+
+	inline void enableUtraSon();
+	inline void disableUltraSon();
+
+	inline void setSendDistance(const bool us = true);
+	inline bool canSendDistance() const;
+
+	inline uint16_t CapteurDistance(const unsigned int stepSize, const unsigned int delaiTest = 50);
+	inline int getDistance();
+
+
 	void Test(void);
 
 	inline static void putON(volatile uint8_t &port, const uint8_t &bit);
@@ -48,6 +63,8 @@ private:
 
 	void InitPort(void);
 	void InitPWM(void);
+
+	UltraSon m_ultraSon;
 
 	void MoteurGauche(int iAlpha, bool bSens);
 	void MoteurDroit(int iAlpha, bool bSens);
@@ -66,17 +83,19 @@ private:
 	bool m_sendCaptIR2; // actuellement le capteur IR gauche
 	bool m_sendCaptIR3; // actuellement le capteur IR droite
 
-	bool m_sendUS;
+	bool m_sendDistance;
 
 
 	static bool m_etatCaptIRArr;
 	static bool m_etatCaptIRG;
 	static bool m_etatCaptIRD;
 
-	// ces variables sont mises à jour par l'ack
+	// ces variables sont mises à jour par l'ack, dans l'ack on stocke aussi la valeur associee de la variable sur le telephone
 	bool m_bCaptIRArrPhone;
 	bool m_bCaptIRGPhone;
 	bool m_bCaptIRDPhone;
+	// ajouter l'etat de la variable distance sur le telephone
+	//int m_distancePhone;
 
 
 	static const int m_vitessePrecision;
@@ -96,9 +115,9 @@ private:
 
 	static volatile uint8_t &m_ledLDDR;
 
-	static volatile uint8_t &m_USPort;
-	static volatile uint8_t &m_USDDR;
-	static const uint8_t &m_USBit;
+	//static volatile uint8_t &m_USPort;
+	//static volatile uint8_t &m_USDDR;
+	//static const uint8_t &m_USBit;
 
 	static volatile uint8_t &m_servoPort;
 	static volatile uint8_t &m_servoDDR;
@@ -174,6 +193,58 @@ inline bool Robot::getCaptIRG()
 inline bool Robot::getCaptIRD()
 {
 	return m_etatCaptIRD;
+}
+
+
+inline void Robot::setSendDistance(const bool us)
+{
+	PRINTD("setSendDiastance");
+
+	if (m_sendDistance = us)
+	{
+		m_ultraSon.enable();
+		PRINTD("enable");
+	}
+	else
+	{
+		m_ultraSon.disable();
+		PRINTD("disable");
+	}
+}
+
+inline bool Robot::canSendDistance() const
+{
+	return m_sendDistance;
+}
+
+inline uint16_t Robot::CapteurDistance(const unsigned int stepSize, const unsigned int delaiTest)
+{
+	return m_ultraSon.readDistance(stepSize, delaiTest);
+}
+
+inline int Robot::getDistance()
+{
+	return m_ultraSon.getDistance();
+}
+
+inline void Robot::interruptPinChange()
+{
+	m_ultraSon.interruptionPinChange();
+}
+
+inline void Robot::interruptOvfT1()
+{
+	m_ultraSon.interruptionOvf();
+}
+
+inline void Robot::enableUtraSon()
+{
+	m_ultraSon.enable();
+}
+
+inline void Robot::disableUltraSon()
+{
+	m_ultraSon.disable();
 }
 
 

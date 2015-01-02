@@ -239,6 +239,13 @@ void dispatch(Robot &robot, Trame const &trameSeparee)
 			robot.setSendCaptIRD(params[0]); // conversion implicite de int à bool
 		break;
 
+	case RUS:
+		if (params[0] == PARAM_VIDE)
+			robot.setSendDistance();
+		else
+			robot.setSendDistance(params[0]); // conversion implicite de int à bool
+		break;
+
 	default:
 		PRINTD("DEFAULT switch - error");
 		break;
@@ -257,6 +264,9 @@ void sendCapteurs(Robot &robot)
 	bool captTemporaire;
 	bool bLedOn(false);
 	static Temporisation temp(80);
+
+	static int distance = -1;
+	int dstTemporaire;
 
 	/* Capteurs IR
 	*  Si il y a un changement d'etat des capteurs alors on envoie l'info
@@ -304,6 +314,22 @@ void sendCapteurs(Robot &robot)
 		if (robot.canSendCaptIRG())
 		{
 			ctorTram(strTrameCapt, IR2, captTemporaire);
+			PRINTD("Trame a envoyer :");
+			PRINTD(strTrameCapt);
+			sendTBluetooth(strTrameCapt, TAILLE_TRAME_A_TRAITER_TOT);
+		}
+	}
+
+	//PRINTD(robot.getDistance());
+	dstTemporaire = robot.getDistance();
+	if (distance != dstTemporaire)
+	{
+		distance = dstTemporaire;
+		PRINTD("dst = ");
+		PRINTD(distance);
+		if (robot.canSendDistance())
+		{
+			ctorTram(strTrameCapt, RUS, dstTemporaire);
 			PRINTD("Trame a envoyer :");
 			PRINTD(strTrameCapt);
 			sendTBluetooth(strTrameCapt, TAILLE_TRAME_A_TRAITER_TOT);
