@@ -31,9 +31,9 @@ public:
 	static bool CapteurArriere(const unsigned int delaiTest = 50);
 	static bool CapteurGauche(const unsigned int delaiTest = 50);
 	static bool CapteurDroit(const unsigned int delaiTest = 50);
-	static bool getCaptIRArr();
-	static bool getCaptIRG();
-	static bool getCaptIRD();
+	inline static bool getCaptIRArr();
+	inline static bool getCaptIRG();
+	inline static bool getCaptIRD();
 
 	void Test(void);
 
@@ -159,6 +159,21 @@ inline bool Robot::canSendCaptIRG() const
 inline bool Robot::canSendCaptIRD() const
 {
 	return m_sendCaptIR3;
+}
+
+inline bool Robot::getCaptIRArr()
+{
+	return m_etatCaptIRArr;
+}
+
+inline bool Robot::getCaptIRG()
+{
+	return m_etatCaptIRG;
+}
+
+inline bool Robot::getCaptIRD()
+{
+	return m_etatCaptIRD;
 }
 
 

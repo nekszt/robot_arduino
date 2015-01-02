@@ -12,6 +12,7 @@ const uint8_t &Robot::m_captArrBit(BIT4);
 const uint8_t &Robot::m_captGBit(BIT5);
 const uint8_t &Robot::m_captDBit(BIT1);
 
+// impossible de changer de port : la led est soudee a la pin 13 (arduino)
 volatile uint8_t &Robot::m_ledLPort(PORTC);
 volatile uint8_t &Robot::m_ledLDDR(DDRC);
 const uint8_t &Robot::m_ledLBit(BIT7);
@@ -383,19 +384,5 @@ bool Robot::CapteurDroit(const unsigned int delaiTest)
 	return bDetect;
 }
 
-bool Robot::getCaptIRArr()
-{
-	return m_etatCaptIRArr;
-}
-
-bool Robot::getCaptIRG()
-{
-	return m_etatCaptIRG;
-}
-
-bool Robot::getCaptIRD()
-{
-	return m_etatCaptIRD;
-}
 
 
