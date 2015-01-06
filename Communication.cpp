@@ -268,9 +268,9 @@ void sendCapteurs(Robot &robot)
 	static bool oldCaptIRD = false;
 	bool captTemporaire;
 	bool bLedOn(false);
-	static Temporisation temp(80);
+	static Temporisation temp(80); // utilise seulement pour la led !
 
-	static int distance = -1;
+	static int distance = 1; // 1 correspond a une erreur, on met par defaut cette valeur
 	int dstTemporaire;
 
 	/* Capteurs IR

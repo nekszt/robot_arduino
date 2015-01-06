@@ -16,7 +16,7 @@ const uint8_t &UltraSon::m_compTrigBit(BIT7);
 UltraSon::UltraSon() : m_enable(false), m_top(TOP_TIMER1), m_nbrOvf(3), m_pulse(5),
 m_diff(0), m_temporaire(0), m_bOK(false), m_cptOvfOutput(0), m_diffChanged(false),
 m_cptOvfPWM(0), m_prescaler(250000), m_coeffConvMS(m_prescaler * 0.000001),
-m_distance(-1), m_distanceNew(-1), m_realDistance(0)
+m_distance(1), m_distanceNew(1), m_realDistance(0)
 {
 	initPorts();
 	initTimer1();
@@ -51,7 +51,9 @@ void UltraSon::disable()
 
 		//TCCR1A &= ~(BIT3 | BIT2);
 
-		m_distance = -1;
+		// 1 correspond a une erreur, dans cette variable on stocke des paliers donc on aura pas la valeur 1 (sauf si on met un palier de 1)
+		// et puis une distance de 1 cm on ne trouvera jamais ça ...
+		m_distance = 1;
 		m_realDistance = 0;
 
 		m_enable = false;
@@ -164,7 +166,7 @@ uint16_t UltraSon::readDistance(const unsigned int taillePalier, const unsigned 
 			/*Serial.print("temps = "); // temps du signal sur PWM Output en us
 			Serial.println(tps);*/
 			m_realDistance = 0;
-			m_distanceNew = -1;
+			m_distanceNew = 1; // on utilise 1 pour dire qu'il y a une erreur car -1 est deja utilise pour les parametres vides d'une trame
 			if (m_distanceNew != m_distance && tempo.finTempo())
 			{
 				tempo.demTempo();
