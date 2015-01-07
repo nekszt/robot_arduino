@@ -304,6 +304,8 @@ void Robot::moteurVitesse(const int vitesseG, const int vitesseD)
 void Robot::moteurVitesseG(const int vitesseG)
 {
 	m_moteurVitesseG = vitesseG * m_vitessePrecision;
+	if (m_moteurVitesseG < 20)
+		m_moteurVitesseG = 20;
 
 	if (m_moteurOnG)
 		MoteurGauche(m_moteurVitesseG, m_moteurAvantG);
@@ -316,6 +318,8 @@ void Robot::moteurVitesseG(const int vitesseG)
 void Robot::moteurVitesseD(const int vitesseD)
 {
 	m_moteurVitesseD = vitesseD * m_vitessePrecision;
+	if (m_moteurVitesseD < 20)
+		m_moteurVitesseD = 20;
 
 	if (m_moteurOnD)
 		MoteurDroit(m_moteurVitesseD, m_moteurAvantD);
