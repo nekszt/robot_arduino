@@ -8,19 +8,21 @@ class Robot
 public:
 	Robot();
 
-	void moteurOn(const bool gauche = true, const bool droite = true);
-	void moteurOnG(const bool gauche = true);
-	void moteurOnD(const bool droite = true);
+	inline void moteurOn(const bool gauche = true, const bool droite = true);
+	inline void moteurOnG(const bool gauche = true);
+	inline void moteurOnD(const bool droite = true);
 
-	void moteurAvant(const bool gauche = true, const bool droite = true);
-	void moteurAvantG(const bool gauche = true);
-	void moteurAvantD(const bool droite = true);
+	inline void moteurAvant(const bool gauche = true, const bool droite = true);
+	inline void moteurAvantG(const bool gauche = true);
+	inline void moteurAvantD(const bool droite = true);
 	
-	void moteurVitesse(const int vitesseG, const int vitesseD);
-	void moteurVitesseG(const int vitesseG);
-	void moteurVitesseD(const int vitesseD);
+	inline void moteurVitesse(const int vitesseG, const int vitesseD);
+	inline void moteurVitesseG(const int vitesseG);
+	inline void moteurVitesseD(const int vitesseD);
 
 	void regulVitesse();
+	inline void setMoteurVitessePalierInc(int iVal);
+	inline void setMoteurDelayPalierInc(int iVal);
 
 
 	inline void setSendCaptIR(const bool ir1 = true, const bool ir2 = true, const bool ir3 = true);
@@ -82,6 +84,14 @@ private:
 
 
 	// Variables permettant de connaitre l'état des moteurs
+	bool m_moteurOnGConsigne;
+	bool m_moteurOnDConsigne;
+	bool m_moteurAvantGConsigne;
+	bool m_moteurAvantDConsigne;
+	int m_moteurVitesseGConsigne; // vitesse entre 0 et 100
+	int m_moteurVitesseDConsigne;
+
+	// valeur reelle sur les moteurs
 	bool m_moteurOnG;
 	bool m_moteurOnD;
 	bool m_moteurAvantG;
@@ -89,7 +99,10 @@ private:
 	int m_moteurVitesseG; // vitesse entre 0 et 100
 	int m_moteurVitesseD;
 
-	const int m_vitessePrecision;
+	int m_vitessePalierIncre; // incrementation de la vitesse par palier de m_vitessePalierIncre (pour lisser les variations de commande sur le moteur)
+	int m_delayPalierIncre; // delay entre les incrementations de paliers
+
+	const int m_vitessePrecision; // precicion pour la valeur de la consigne
 
 
 	bool m_sendCaptIR1; // actuellement le capteur IR arriere
@@ -268,6 +281,192 @@ inline void Robot::setPositionServo(const int position) const
 	{
 		OCR1A = ((float)(1 + (position / (float)POS_SERVO_DEG_MAX)) * m_coeffConvMsStepT1) - 1;
 	}
+}
+
+
+inline void Robot::setMoteurVitessePalierInc(int iVal)
+{
+	if (iVal > 50)
+		m_vitessePalierIncre = 50;
+	else if (iVal < 1)
+		m_vitessePalierIncre = 1;
+	else
+		m_vitessePalierIncre = iVal;
+}
+
+inline void Robot::setMoteurDelayPalierInc(int iVal)
+{
+	if (iVal > 999)
+		m_delayPalierIncre = 999;
+	else if (iVal < 1)
+		m_delayPalierIncre = 1;
+	else
+		m_delayPalierIncre = iVal;
+}
+
+
+/*********************************************************
+* Fonction pour mettre les valeurs de consigne des moteurs
+**********************************************************/
+
+
+inline void Robot::moteurOn(const bool gauche, const bool droite)
+{
+	moteurOnG(gauche);
+	moteurOnD(droite);
+
+	/*if (gauche && droite)
+	Test();*/
+
+	PRINTD("moteurOn");
+}
+
+inline void Robot::moteurOnG(const bool gauche)
+{
+	// on met en route le moteur
+	/*if (gauche && !m_moteurOnG)
+	{
+	m_moteurOnG = true;
+	MoteurGauche(m_moteurVitesseG, m_moteurAvantG);
+	}
+	// on éteint le moteur
+	else if (!gauche && m_moteurOnG)
+	{
+	m_moteurOnG = false;
+	MoteurGauche(0, m_moteurAvantG);
+	}*/
+
+	m_moteurOnGConsigne = gauche;
+
+	PRINTD("moteurOnG");
+}
+
+inline void Robot::moteurOnD(const bool droite)
+{
+	// on met en route le moteur
+	/*if (droite && !m_moteurOnD)
+	{
+	m_moteurOnD = true;
+	MoteurDroit(m_moteurVitesseD, m_moteurAvantD);
+	}
+	// on éteint le moteur
+	else if (!droite && m_moteurOnD)
+	{
+	m_moteurOnD = false;
+	MoteurDroit(0, m_moteurAvantD);
+	}*/
+
+	m_moteurOnDConsigne = droite;
+
+	PRINTD("moteurOnD");
+}
+
+
+inline void Robot::moteurAvant(const bool gauche, const bool droite)
+{
+	moteurAvantG(gauche);
+	moteurAvantD(droite);
+
+	PRINTD("moteurAvant");
+}
+
+inline void Robot::moteurAvantG(const bool gauche)
+{
+	// on met le moteur en avant
+	/*if (gauche && !m_moteurAvantG)
+	{
+	m_moteurAvantG = true;
+
+	if (m_moteurOnG)
+	MoteurGauche(m_moteurVitesseG, true);
+	else
+	MoteurGauche(0, true);
+	}
+	// on met le moteur en arriere
+	else if (!gauche && m_moteurAvantG)
+	{
+	m_moteurAvantG = false;
+
+	if (m_moteurOnG)
+	MoteurGauche(m_moteurVitesseG, false);
+	else
+	MoteurGauche(0, false);
+	}*/
+
+	m_moteurAvantGConsigne = gauche;
+
+	PRINTD("moteurAvantG");
+}
+
+inline void Robot::moteurAvantD(const bool droite)
+{
+	// on met le moteur en avant
+	/*if (droite && !m_moteurAvantD)
+	{
+	m_moteurAvantD = true;
+
+	if (m_moteurOnD)
+	MoteurDroit(m_moteurVitesseD, true);
+	else
+	MoteurDroit(0, true);
+	}
+	// on met le moteur en arriere
+	else if (!droite && m_moteurAvantD)
+	{
+	m_moteurAvantD = false;
+
+	if (m_moteurOnD)
+	MoteurDroit(m_moteurVitesseD, false);
+	else
+	MoteurDroit(0, false);
+	}*/
+
+	m_moteurAvantDConsigne = droite;
+
+	PRINTD("moteurAvantD");
+}
+
+
+inline void Robot::moteurVitesse(const int vitesseG, const int vitesseD)
+{
+	moteurVitesseG(vitesseG);
+	moteurVitesseD(vitesseD);
+
+	PRINTD("moteurVitesse");
+}
+
+inline void Robot::moteurVitesseG(const int vitesseG)
+{
+	m_moteurVitesseGConsigne = vitesseG * m_vitessePrecision;
+
+	if (m_moteurVitesseGConsigne < 20 && m_moteurVitesseGConsigne != 0)
+		m_moteurVitesseGConsigne = 20;
+	else if (m_moteurVitesseGConsigne > 100)
+		m_moteurVitesseGConsigne = 100;
+
+	/*if (m_moteurOnG)
+	MoteurGauche(m_moteurVitesseG, m_moteurAvantG);
+	else
+	MoteurGauche(0, m_moteurAvantG);*/
+
+	PRINTD("moteurVitesseG");
+}
+
+inline void Robot::moteurVitesseD(const int vitesseD)
+{
+	m_moteurVitesseDConsigne = vitesseD * m_vitessePrecision;
+
+	if (m_moteurVitesseDConsigne < 20 && m_moteurVitesseDConsigne != 0)
+		m_moteurVitesseDConsigne = 20;
+	else if (m_moteurVitesseDConsigne > 100)
+		m_moteurVitesseDConsigne = 100;
+
+	/*if (m_moteurOnD)
+	MoteurDroit(m_moteurVitesseD, m_moteurAvantD);
+	else
+	MoteurDroit(0, m_moteurAvantD);*/
+
+	PRINTD("moteurVitesseD");
 }
 
 

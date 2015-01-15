@@ -70,6 +70,8 @@ void loop()
 		dispatch(*monRobot, maTrame);
 	}
 
+	monRobot->regulVitesse();
+
 
 	sendCapteurs(*monRobot);
 

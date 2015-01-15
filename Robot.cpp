@@ -38,12 +38,22 @@ m_vitessePrecision(VITESSE_PRECISION)
 	// initialisations sevomoteur
 	initServoMoteur();
 
+	m_moteurOnGConsigne = 0;
+	m_moteurOnDConsigne = 0;
+	m_moteurAvantGConsigne = 1;
+	m_moteurAvantDConsigne = 1;
+	m_moteurVitesseGConsigne = 0;
+	m_moteurVitesseDConsigne = 0;
+
 	m_moteurOnG = 0;
 	m_moteurOnD = 0;
 	m_moteurAvantG = 1;
 	m_moteurAvantD = 1;
 	m_moteurVitesseG = 0;
 	m_moteurVitesseD = 0;
+
+	m_vitessePalierIncre = 5;
+	m_delayPalierIncre = 100; // 10ms par defaut entre des incrementations de 5% du rapport cyclique de la PWM
 
 	m_sendCaptIR1 = false;
 	m_sendCaptIR2 = false;
@@ -168,30 +178,148 @@ void Robot::MoteurDroit(int iAlpha, bool bSens)
 	}
 }
 
-/*void Robot::regulVitesse()
+void Robot::regulVitesse()
 {
-	static Temporisation tempoG;
-	static Temporisation tempoD;
-	bool incremente;
-	m_vitesseVariationMaxDelay(10), m_delayPalierVitesse
+	static Temporisation tempo(m_delayPalierIncre);
+	int vitesseGC; // consigne vitesse
+	int vitesseDC; // consigne vitesse
 
-	bool m_moteurOnG;
-
-	if (( ((m_moteurOnGReach - m_moteurOnG) > m_vitesseVariationMaxDelay) || ((m_moteurOnGReach - m_moteurOnG) < m_vitesseVariationMaxDelay) ) && tempoG.finTempo())
+	// ------- Controle moteur gauche, une partie de on/off et sens des moteurs -------------------------------
+	if (!m_moteurOnGConsigne)
 	{
-		m_moteurOnG = (m_moteurOnGReach - m_moteurOnG) / 10;
+		if (m_moteurVitesseG == 0)
+			m_moteurOnG = false;
+		else
+		{
+			vitesseGC = 0;
+			m_moteurOnG = true;
+		}
 	}
-	bool m_moteurOnD;
-	bool m_moteurOnDReach;
-	bool m_moteurAvantG;
-	bool m_moteurAvantGReach;
-	bool m_moteurAvantD;
-	bool m_moteurAvantDReach;
-	int m_moteurVitesseG; // vitesse entre 0 et 100
-	int m_moteurVitesseGReach; // vitesse entre 0 et 100
-	int m_moteurVitesseD;
-	int m_moteurVitesseDReach;
-}*/
+
+	// gere la transition lorsque les moteurs change de sens
+	else
+	{
+		m_moteurOnG = true;
+
+		if (m_moteurAvantGConsigne != m_moteurAvantG)
+		{
+			if (m_moteurVitesseG != 0)
+				vitesseGC = 0;
+			else
+			{
+				m_moteurAvantG = !m_moteurAvantG;
+				MoteurGauche(m_moteurVitesseG, m_moteurAvantG);
+				vitesseGC = m_moteurVitesseGConsigne;
+			}
+		}
+		else
+		{
+			vitesseGC = m_moteurVitesseGConsigne;
+		}
+	}
+	// --------------------------------------------------------------------------------------------------------
+
+	// ------- Controle moteur droit, une partie de on/off et sens des moteurs -------------------------------
+	if (!m_moteurOnDConsigne)
+	{
+		if (m_moteurVitesseD == 0)
+			m_moteurOnD = false;
+		else
+		{
+			vitesseDC = 0;
+			m_moteurOnD = true;
+		}
+	}
+
+	// gere la transition lorsque les moteurs change de sens
+	else
+	{
+		m_moteurOnD = true;
+
+		if (m_moteurAvantDConsigne != m_moteurAvantD)
+		{
+			if (m_moteurVitesseD != 0)
+				vitesseDC = 0;
+			else
+			{
+				m_moteurAvantD = !m_moteurAvantD;
+				MoteurDroit(m_moteurVitesseD, m_moteurAvantD);
+				vitesseDC = m_moteurVitesseDConsigne;
+			}
+		}
+		else
+			vitesseDC = m_moteurVitesseDConsigne;
+	}
+	// --------------------------------------------------------------------------------------------------------
+
+	// gere la vitesse des moteurs
+	if (tempo.finTempo(m_delayPalierIncre))
+	{
+		if (m_moteurOnG)
+		{
+			if (vitesseGC >= (m_moteurVitesseG + m_vitessePalierIncre))
+			{
+				if (m_moteurVitesseG < 20) // on verifie la vitesse min (on enleve les 20 premiers %)
+					m_moteurVitesseG = 20;
+				else
+					m_moteurVitesseG += m_vitessePalierIncre;
+
+				MoteurGauche(m_moteurVitesseG, m_moteurAvantG);
+
+				tempo.demTempo();
+			}
+			else if (vitesseGC <= (m_moteurVitesseG - m_vitessePalierIncre))
+			{
+				if (m_moteurVitesseG <= 20) // on verifie la vitesse min (on enleve les 20 premiers %)
+					m_moteurVitesseG = 0;
+				else
+					m_moteurVitesseG -= m_vitessePalierIncre;
+
+				MoteurGauche(m_moteurVitesseG, m_moteurAvantG);
+
+				tempo.demTempo();
+			}
+			else if (vitesseGC != m_moteurVitesseG)
+			{
+				m_moteurVitesseG = vitesseGC;
+				MoteurGauche(m_moteurVitesseG, m_moteurAvantG);
+				tempo.demTempo();
+			}
+		}
+
+		if (m_moteurOnD)
+		{
+			if (vitesseDC >= (m_moteurVitesseD + m_vitessePalierIncre))
+			{
+				if (m_moteurVitesseD < 20) // on verifie la vitesse min (on enleve les 20 premiers %)
+					m_moteurVitesseD = 20;
+				else
+					m_moteurVitesseD += m_vitessePalierIncre;
+
+				MoteurDroit(m_moteurVitesseD, m_moteurAvantD);
+
+				tempo.demTempo();
+			}
+			else if (vitesseDC <= (m_moteurVitesseD - m_vitessePalierIncre))
+			{
+				if (m_moteurVitesseD <= 20) // on verifie la vitesse min (on enleve les 20 premiers %)
+					m_moteurVitesseD = 0;
+				else
+					m_moteurVitesseD -= m_vitessePalierIncre;
+
+				MoteurDroit(m_moteurVitesseD, m_moteurAvantD);
+
+				tempo.demTempo();
+			}
+			else if (vitesseDC != m_moteurVitesseD)
+			{
+				m_moteurVitesseD = vitesseDC;
+				MoteurDroit(m_moteurVitesseD, m_moteurAvantD);
+				tempo.demTempo();
+			}
+		}
+	}
+}
 
 
 /***********************************
@@ -212,150 +340,6 @@ void Robot::Test(void)
 /***********************************
 FONCTIONS PUBLIC
 ************************************/
-void Robot::moteurOn(const bool gauche, const bool droite)
-{
-	moteurOnG(gauche);
-	moteurOnD(droite);
-
-	/*if (gauche && droite)
-		Test();*/
-
-	PRINTD("moteurOn");
-}
-
-void Robot::moteurOnG(const bool gauche)
-{
-	// on met en route le moteur
-	if (gauche && !m_moteurOnG)
-	{
-		m_moteurOnG = true;
-		MoteurGauche(m_moteurVitesseG, m_moteurAvantG);
-	}
-	// on éteint le moteur
-	else if (!gauche && m_moteurOnG)
-	{
-		m_moteurOnG = false;
-		MoteurGauche(0, m_moteurAvantG);
-	}
-
-	PRINTD("moteurOnG");
-}
-
-void Robot::moteurOnD(const bool droite)
-{
-	// on met en route le moteur
-	if (droite && !m_moteurOnD)
-	{
-		m_moteurOnD = true;
-		MoteurDroit(m_moteurVitesseD, m_moteurAvantD);
-	}
-	// on éteint le moteur
-	else if (!droite && m_moteurOnD)
-	{
-		m_moteurOnD = false;
-		MoteurDroit(0, m_moteurAvantD);
-	}
-
-	PRINTD("moteurOnD");
-}
-
-
-void Robot::moteurAvant(const bool gauche, const bool droite)
-{
-	moteurAvantG(gauche);
-	moteurAvantD(droite);
-
-	PRINTD("moteurAvant");
-}
-
-void Robot::moteurAvantG(const bool gauche)
-{
-	// on met le moteur en avant
-	if (gauche && !m_moteurAvantG)
-	{
-		m_moteurAvantG = true;
-
-		if (m_moteurOnG)
-			MoteurGauche(m_moteurVitesseG, true);
-		else
-			MoteurGauche(0, true);
-	}
-	// on met le moteur en arriere
-	else if (!gauche && m_moteurAvantG)
-	{
-		m_moteurAvantG = false;
-
-		if (m_moteurOnG)
-			MoteurGauche(m_moteurVitesseG, false);
-		else
-			MoteurGauche(0, false);
-	}
-
-	PRINTD("moteurAvantG");
-}
-
-void Robot::moteurAvantD(const bool droite)
-{
-	// on met le moteur en avant
-	if (droite && !m_moteurAvantD)
-	{
-		m_moteurAvantD = true;
-
-		if (m_moteurOnD)
-			MoteurDroit(m_moteurVitesseD, true);
-		else
-			MoteurDroit(0, true);
-	}
-	// on met le moteur en arriere
-	else if (!droite && m_moteurAvantD)
-	{
-		m_moteurAvantD = false;
-
-		if (m_moteurOnD)
-			MoteurDroit(m_moteurVitesseD, false);
-		else
-			MoteurDroit(0, false);
-	}
-
-	PRINTD("moteurAvantD");
-}
-
-
-void Robot::moteurVitesse(const int vitesseG, const int vitesseD)
-{
-	moteurVitesseG(vitesseG);
-	moteurVitesseD(vitesseD);
-
-	PRINTD("moteurVitesse");
-}
-
-void Robot::moteurVitesseG(const int vitesseG)
-{
-	m_moteurVitesseG = vitesseG * m_vitessePrecision;
-	if (m_moteurVitesseG < 20 && m_moteurVitesseG != 0)
-		m_moteurVitesseG = 20;
-
-	if (m_moteurOnG)
-		MoteurGauche(m_moteurVitesseG, m_moteurAvantG);
-	else
-		MoteurGauche(0, m_moteurAvantG);
-	
-	PRINTD("moteurVitesseG");
-}
-
-void Robot::moteurVitesseD(const int vitesseD)
-{
-	m_moteurVitesseD = vitesseD * m_vitessePrecision;
-	if (m_moteurVitesseD < 20 && m_moteurVitesseD != 0)
-		m_moteurVitesseD = 20;
-
-	if (m_moteurOnD)
-		MoteurDroit(m_moteurVitesseD, m_moteurAvantD);
-	else
-		MoteurDroit(0, m_moteurAvantD);
-
-	PRINTD("moteurVitesseD");
-}
 
 
 /***********************************

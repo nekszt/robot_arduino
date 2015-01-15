@@ -251,6 +251,16 @@ void dispatch(Robot &robot, Trame const &trameSeparee)
 			robot.setPositionServo(params[0]);
 		break;
 
+	case MVPI:
+		if (params[0] != PARAM_VIDE)
+			robot.setMoteurVitessePalierInc(params[0]);
+		break;
+
+	case MDPI:
+		if (params[0] != PARAM_VIDE)
+			robot.setMoteurDelayPalierInc(params[0]);
+		break;
+
 	default:
 		PRINTD("DEFAULT switch - error");
 		break;

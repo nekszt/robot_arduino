@@ -49,6 +49,9 @@
 
 #define PSM	15
 
+#define MVPI 16
+#define MDPI 17
+
 
 // Define pour l'envoie des trames
 #define IR1 1
