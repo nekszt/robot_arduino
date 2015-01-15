@@ -20,6 +20,8 @@ public:
 	void moteurVitesseG(const int vitesseG);
 	void moteurVitesseD(const int vitesseD);
 
+	void regulVitesse();
+
 
 	inline void setSendCaptIR(const bool ir1 = true, const bool ir2 = true, const bool ir3 = true);
 	inline void setSendCaptIRArr(const bool ir = true);
@@ -76,6 +78,7 @@ private:
 
 	void MoteurGauche(int iAlpha, bool bSens);
 	void MoteurDroit(int iAlpha, bool bSens);
+
 
 
 	// Variables permettant de connaitre l'état des moteurs

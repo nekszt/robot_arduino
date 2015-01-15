@@ -6,9 +6,9 @@ volatile uint8_t &Robot::m_captDPin(PINF);
 volatile uint8_t &Robot::m_captArrDDR(DDRF);
 volatile uint8_t &Robot::m_captGDDR(DDRF);
 volatile uint8_t &Robot::m_captDDDR(DDRF);
-const uint8_t &Robot::m_captArrBit(BIT4);
+const uint8_t &Robot::m_captArrBit(BIT1);
 const uint8_t &Robot::m_captGBit(BIT5);
-const uint8_t &Robot::m_captDBit(BIT1);
+const uint8_t &Robot::m_captDBit(BIT4);
 
 // impossible de changer de port : la led est soudee a la pin 13 (arduino)
 volatile uint8_t &Robot::m_ledLPort(PORTC);
@@ -28,7 +28,8 @@ bool Robot::m_etatCaptIRG(false);
 bool Robot::m_etatCaptIRD(false);
 
 
-Robot::Robot() : m_ultraSon(), m_prescalerT1(250000), m_coeffConvMsStepT1(m_prescalerT1 * 0.001), m_vitessePrecision(VITESSE_PRECISION)
+Robot::Robot() : m_ultraSon(), m_prescalerT1(250000), m_coeffConvMsStepT1(m_prescalerT1 * 0.001),
+m_vitessePrecision(VITESSE_PRECISION)
 {
 	InitPort();
 	// initialisation timer 3 et 4 pour moteurs
@@ -99,7 +100,8 @@ void Robot::InitPWM(void)
 {
 	//MOTEUR DROIT (2) Timer 4 
 	TCCR4A = 0b00000010;
-	TCCR4B = 0b00001011;
+	//TCCR4B = 0b00001011; // prescaler -> /1024
+	TCCR4B = 0b00001001; // prescaler -> /256
 	//TCCR4C = 0b00001001;
 	TCCR4C = 0b00001000; // on desactive immediatement la pwm
 	TCCR4D = 0b00000000;
@@ -109,7 +111,8 @@ void Robot::InitPWM(void)
 	//MOTEUR GAUCHE (1) Timer3
 	//TCCR3A = 0b10000001;
 	TCCR3A = 0b00000001; // on desactive immediatement la pwm
-	TCCR3B = 0b00001101;
+	//TCCR3B = 0b00001101; // prescaler -> /1024
+	TCCR3B = 0b00001100; // prescaler -> /256
 	TCCR3C = 0b00000000;
 	//OCR3AL = 100; //<---Registre de comparaison
 }
@@ -164,6 +167,31 @@ void Robot::MoteurDroit(int iAlpha, bool bSens)
 		TCCR4C |= BIT0; // on reactive la PWM
 	}
 }
+
+/*void Robot::regulVitesse()
+{
+	static Temporisation tempoG;
+	static Temporisation tempoD;
+	bool incremente;
+	m_vitesseVariationMaxDelay(10), m_delayPalierVitesse
+
+	bool m_moteurOnG;
+
+	if (( ((m_moteurOnGReach - m_moteurOnG) > m_vitesseVariationMaxDelay) || ((m_moteurOnGReach - m_moteurOnG) < m_vitesseVariationMaxDelay) ) && tempoG.finTempo())
+	{
+		m_moteurOnG = (m_moteurOnGReach - m_moteurOnG) / 10;
+	}
+	bool m_moteurOnD;
+	bool m_moteurOnDReach;
+	bool m_moteurAvantG;
+	bool m_moteurAvantGReach;
+	bool m_moteurAvantD;
+	bool m_moteurAvantDReach;
+	int m_moteurVitesseG; // vitesse entre 0 et 100
+	int m_moteurVitesseGReach; // vitesse entre 0 et 100
+	int m_moteurVitesseD;
+	int m_moteurVitesseDReach;
+}*/
 
 
 /***********************************
