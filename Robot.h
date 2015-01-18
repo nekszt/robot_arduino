@@ -104,6 +104,11 @@ private:
 
 	const int m_vitessePrecision; // precicion pour la valeur de la consigne
 
+	static const int m_motViteConsigneMin;
+
+	static const int m_motViteMinSurIncrem; // utilise dans la fct regulVitesse
+	static const int m_motViteMinSurDecrem; // utilise dans la fct regulVitesse
+
 
 	bool m_sendCaptIR1; // actuellement le capteur IR arriere
 	bool m_sendCaptIR2; // actuellement le capteur IR gauche
@@ -439,8 +444,8 @@ inline void Robot::moteurVitesseG(const int vitesseG)
 {
 	m_moteurVitesseGConsigne = vitesseG * m_vitessePrecision;
 
-	if (m_moteurVitesseGConsigne < 20 && m_moteurVitesseGConsigne != 0)
-		m_moteurVitesseGConsigne = 20;
+	if (m_moteurVitesseGConsigne < m_motViteConsigneMin && m_moteurVitesseGConsigne != 0)
+		m_moteurVitesseGConsigne = m_motViteConsigneMin;
 	else if (m_moteurVitesseGConsigne > 100)
 		m_moteurVitesseGConsigne = 100;
 
@@ -456,8 +461,8 @@ inline void Robot::moteurVitesseD(const int vitesseD)
 {
 	m_moteurVitesseDConsigne = vitesseD * m_vitessePrecision;
 
-	if (m_moteurVitesseDConsigne < 20 && m_moteurVitesseDConsigne != 0)
-		m_moteurVitesseDConsigne = 20;
+	if (m_moteurVitesseDConsigne < m_motViteConsigneMin && m_moteurVitesseDConsigne != 0)
+		m_moteurVitesseDConsigne = m_motViteConsigneMin;
 	else if (m_moteurVitesseDConsigne > 100)
 		m_moteurVitesseDConsigne = 100;
 

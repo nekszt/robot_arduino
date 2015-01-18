@@ -1,5 +1,7 @@
 #include "Robot.h"
 
+const int Robot::m_motViteConsigneMin = 20;
+
 volatile uint8_t &Robot::m_captArrPin(PINF);
 volatile uint8_t &Robot::m_captGPin(PINF);
 volatile uint8_t &Robot::m_captDPin(PINF);
@@ -27,6 +29,9 @@ bool Robot::m_etatCaptIRArr(false);
 bool Robot::m_etatCaptIRG(false);
 bool Robot::m_etatCaptIRD(false);
 
+const int Robot::m_motViteMinSurIncrem = 0;
+const int Robot::m_motViteMinSurDecrem = 0;
+
 
 Robot::Robot() : m_ultraSon(), m_prescalerT1(250000), m_coeffConvMsStepT1(m_prescalerT1 * 0.001),
 m_vitessePrecision(VITESSE_PRECISION)
@@ -53,7 +58,7 @@ m_vitessePrecision(VITESSE_PRECISION)
 	m_moteurVitesseD = 0;
 
 	m_vitessePalierIncre = 5;
-	m_delayPalierIncre = 100; // 10ms par defaut entre des incrementations de 5% du rapport cyclique de la PWM
+	m_delayPalierIncre = 40; // 10ms par defaut entre des incrementations de 5% du rapport cyclique de la PWM
 
 	m_sendCaptIR1 = false;
 	m_sendCaptIR2 = false;
@@ -180,7 +185,8 @@ void Robot::MoteurDroit(int iAlpha, bool bSens)
 
 void Robot::regulVitesse()
 {
-	static Temporisation tempo(m_delayPalierIncre);
+	static Temporisation tempoG(m_delayPalierIncre);
+	static Temporisation tempoD(m_delayPalierIncre);
 	int vitesseGC; // consigne vitesse
 	int vitesseDC; // consigne vitesse
 
@@ -253,69 +259,73 @@ void Robot::regulVitesse()
 	// --------------------------------------------------------------------------------------------------------
 
 	// gere la vitesse des moteurs
-	if (tempo.finTempo(m_delayPalierIncre))
+
+	if (tempoG.finTempo(m_delayPalierIncre))
 	{
 		if (m_moteurOnG)
 		{
 			if (vitesseGC >= (m_moteurVitesseG + m_vitessePalierIncre))
 			{
-				if (m_moteurVitesseG < 20) // on verifie la vitesse min (on enleve les 20 premiers %)
-					m_moteurVitesseG = 20;
+				if (m_moteurVitesseG < m_motViteMinSurIncrem) // on verifie la vitesse min (on enleve les 20 premiers %)
+					m_moteurVitesseG = m_motViteMinSurIncrem;
 				else
 					m_moteurVitesseG += m_vitessePalierIncre;
 
 				MoteurGauche(m_moteurVitesseG, m_moteurAvantG);
 
-				tempo.demTempo();
+				tempoG.demTempo();
 			}
 			else if (vitesseGC <= (m_moteurVitesseG - m_vitessePalierIncre))
 			{
-				if (m_moteurVitesseG <= 20) // on verifie la vitesse min (on enleve les 20 premiers %)
+				if (m_moteurVitesseG <= m_motViteMinSurDecrem) // on verifie la vitesse min (on enleve les 20 premiers %)
 					m_moteurVitesseG = 0;
 				else
 					m_moteurVitesseG -= m_vitessePalierIncre;
 
 				MoteurGauche(m_moteurVitesseG, m_moteurAvantG);
 
-				tempo.demTempo();
+				tempoG.demTempo();
 			}
 			else if (vitesseGC != m_moteurVitesseG)
 			{
 				m_moteurVitesseG = vitesseGC;
 				MoteurGauche(m_moteurVitesseG, m_moteurAvantG);
-				tempo.demTempo();
+				tempoG.demTempo();
 			}
 		}
+	}
 
+	if (tempoD.finTempo(m_delayPalierIncre))
+	{
 		if (m_moteurOnD)
 		{
 			if (vitesseDC >= (m_moteurVitesseD + m_vitessePalierIncre))
 			{
-				if (m_moteurVitesseD < 20) // on verifie la vitesse min (on enleve les 20 premiers %)
-					m_moteurVitesseD = 20;
+				if (m_moteurVitesseD < m_motViteMinSurIncrem) // on verifie la vitesse min (on enleve les 20 premiers %)
+					m_moteurVitesseD = m_motViteMinSurIncrem;
 				else
 					m_moteurVitesseD += m_vitessePalierIncre;
 
 				MoteurDroit(m_moteurVitesseD, m_moteurAvantD);
 
-				tempo.demTempo();
+				tempoD.demTempo();
 			}
 			else if (vitesseDC <= (m_moteurVitesseD - m_vitessePalierIncre))
 			{
-				if (m_moteurVitesseD <= 20) // on verifie la vitesse min (on enleve les 20 premiers %)
+				if (m_moteurVitesseD <= m_motViteMinSurDecrem) // on verifie la vitesse min (on enleve les 20 premiers %)
 					m_moteurVitesseD = 0;
 				else
 					m_moteurVitesseD -= m_vitessePalierIncre;
 
 				MoteurDroit(m_moteurVitesseD, m_moteurAvantD);
 
-				tempo.demTempo();
+				tempoD.demTempo();
 			}
 			else if (vitesseDC != m_moteurVitesseD)
 			{
 				m_moteurVitesseD = vitesseDC;
 				MoteurDroit(m_moteurVitesseD, m_moteurAvantD);
-				tempo.demTempo();
+				tempoD.demTempo();
 			}
 		}
 	}
