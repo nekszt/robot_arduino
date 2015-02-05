@@ -58,7 +58,7 @@ m_vitessePrecision(VITESSE_PRECISION)
 	m_moteurVitesseD = 0;
 
 	m_vitessePalierIncre = 5;
-	m_delayPalierIncre = 40; // 10ms par defaut entre des incrementations de 5% du rapport cyclique de la PWM
+	m_delayPalierIncre = 20; // 20ms par defaut entre des incrementations de 5% du rapport cyclique de la PWM
 
 	m_sendCaptIR1 = false;
 	m_sendCaptIR2 = false;
