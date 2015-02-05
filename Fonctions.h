@@ -38,7 +38,7 @@ extern const uint8_t BIT7;
 
 
 #define DEBUG
-//#undef DEBUG
+#undef DEBUG // remove DEBUG
 
 #ifdef DEBUG
 #define PRINTD Serial.println
